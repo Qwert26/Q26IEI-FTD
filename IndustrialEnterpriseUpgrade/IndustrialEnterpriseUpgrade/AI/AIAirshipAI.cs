@@ -11,6 +11,7 @@ namespace IndustrialEnterpriseUpgrade.AI {
 				return true;
 			}
 		}
+		public AirshipAIParameters parameters;
 		/// <summary>
 		/// Greift den am höchsten priorisierten Feind an.
 		/// </summary>
