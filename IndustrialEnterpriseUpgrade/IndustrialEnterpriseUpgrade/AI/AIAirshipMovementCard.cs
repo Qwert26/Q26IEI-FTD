@@ -50,6 +50,7 @@ namespace IndustrialEnterpriseUpgrade.AI {
 			base.GetExtraInfo(v);
 			v.AddDelimiterOpen(DelimiterType.Card);
 			v.WriteNextFloat(airshipParameters.maxHeight);
+			v.WriteNextFloat(airshipParameters.minHeight);
 			v.WriteNextFloat(airshipParameters.idleHeight);
 			v.WriteNextBool(airshipParameters.lockHeight);
 			v.AddDelimiterClose(DelimiterType.Card);

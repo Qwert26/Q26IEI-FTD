@@ -48,6 +48,15 @@
     <Compile Include="AI\AIAirshipMovementCard.cs" />
     <Compile Include="AI\AirshipAIParameters.cs" />
     <Compile Include="IndustrialEnterpriseUpgradePlugin.cs" />
+    <Compile Include="Movment\Water\HydrofoilActuator.cs" />
+    <Compile Include="Movment\Water\HydrofoilComponent.cs" />
+    <Compile Include="Movment\Water\HydrofoilConnectedTypeInfo.cs" />
+    <Compile Include="Movment\Water\HydrofoilConnectionTypes.cs" />
+    <Compile Include="Movment\Water\HydrofoilConnector.cs" />
+    <Compile Include="Movment\Water\HydrofoilController.cs" />
+    <Compile Include="Movment\Water\HydrofoilFeeler.cs" />
+    <Compile Include="Movment\Water\HydrofoilNode.cs" />
+    <Compile Include="Movment\Water\HydrofoilNodeSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
