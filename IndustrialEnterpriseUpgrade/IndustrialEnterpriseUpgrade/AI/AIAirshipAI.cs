@@ -1,10 +1,9 @@
-﻿using System;
-namespace IndustrialEnterpriseUpgrade.AI {
+﻿namespace IndustrialEnterpriseUpgrade.AI {
 	public class AIAirshipAI : AIConstructableControl {
 		public ControllerWrapper pitch = new ControllerWrapper(new DefaultControl());
 		public ControllerWrapper yaw = new ControllerWrapper(new DefaultControl());
 		public ControllerWrapper roll = new ControllerWrapper(new DefaultControl());
-		public ControllerWrapper altitude = new ControllerWrapper(new PidStandardForm());
+		public ControllerWrapper altitude = new ControllerWrapper(new DefaultControl());
 		public override enumAIConstructableType Type {
 			get {
 				return enumAIConstructableType.aerial;
@@ -16,52 +15,55 @@ namespace IndustrialEnterpriseUpgrade.AI {
 			}
 		}
 		public AirshipAIParameters parameters;
+		public enum BaseState {
+			ENGAGE,
+			FLEETMOVE,
+			PATROL,
+			SEARCH
+		}
+		public BaseState baseState;
 		/// <summary>
 		/// Greift den am höchsten priorisierten Feind an.
 		/// </summary>
-		/// <see cref="AiNode.GetTargetPositionInfoForEngagementTarget()"/>
+		/// <seealso cref="AiNode.GetTargetPositionInfoForEngagementTarget()"/>
 		public override void Engage() {
+			baseState = BaseState.ENGAGE;
 			TPI = Node.GetTargetPositionInfoForEngagementTarget();
-			MoveToCurrentTPI();
 		}
 		/// <summary>
 		/// Fliegt in Formation mit dem Flagschiff
 		/// </summary>
-		/// <see cref="Force.GetWaypointToMoveTo()"/>
+		/// <seealso cref="Force.GetWaypointToMoveTo()"/>
 		public override void FleetMove() {
+			baseState = BaseState.FLEETMOVE;
 			TPI = GetTargetPositionInfoForThisWayPoint(Node.MainConstruct.GetForce().GetWaypointToMoveTo());
-			MoveToCurrentTPI();
 		}
 		/// <summary>
 		/// Folgt einer vom Spieler gegebener Route.
 		/// </summary>
-		/// <see cref="AiNode.GetRouteParameters()"/>
+		/// <seealso cref="AiNode.GetRouteParameters()"/>
 		public override void Patrol() {
+			baseState = BaseState.PATROL;
 			PatrolRoutes routeParameters = Node.GetRouteParameters();
 			if(routeParameters != null) {
 				PatrolRoute route = routeParameters.GetSelectedRoute();
 				if(route.GetNumberOfNodes() > 0) {
 					PatrolWaypoint waypoint = route.GetNextNode();
-					TPI = new TargetPositionInfo(waypoint.GetPosition(), Node.GetOurConstructablePosition(), Node.GetOurForward(), Node.GetOurRight());
-					MoveToCurrentTPI();
+					TPI = GetTargetPositionInfoForThisWayPoint(waypoint.GetPosition());
 					route.AssessWaypointReached(Node.GetOurConstructablePosition());
-					if(route.GetNumberOfNodes() == 0&&Node.GetTeam()==GAMESTATE.MyTeam) {
-						AiSoundPlayer.PlayAiVoice(ForceTravelRestrictions.Air,"NewOrders");
+					if(route.GetNumberOfNodes() == 0 && Node.GetTeam() == GAMESTATE.MyTeam) {
+						AiSoundPlayer.PlayAiVoice(ForceTravelRestrictions.Air, "NewOrders");
 					}
 				}
 			}
-			throw new NotImplementedException();
 		}
 		/// <summary>
 		/// Fliegt zum Spieler, wenn keine Feinde im Spiel sind.
 		/// </summary>
-		/// <see cref="StaticPlayers.GetFriendlyPlayerPosition(ObjectId)"/>
+		/// <seealso cref="StaticPlayers.GetFriendlyPlayerPosition(ObjectId)"/>
 		public override void Search() {
+			baseState = BaseState.SEARCH;
 			TPI = GetTargetPositionInfoForThisWayPoint(StaticPlayers.GetFriendlyPlayerPosition(Node.GetTeam()));
-			MoveToCurrentTPI();
-		}
-		public void MoveToCurrentTPI() {
-
 		}
 	}
 }

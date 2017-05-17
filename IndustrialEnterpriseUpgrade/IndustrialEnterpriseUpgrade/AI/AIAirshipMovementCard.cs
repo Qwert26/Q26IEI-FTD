@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 namespace IndustrialEnterpriseUpgrade.AI {
-	public class AIAirshipMovementCard : AICard{
+	public class AIAirshipMovementCard : AICard {
 		public AIAirshipAI airshipAi;
 		public AirshipAIParameters airshipParameters;
 		public override void ComponentStart() {

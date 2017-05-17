@@ -1,4 +1,4 @@
-﻿namespace IndustrialEnterpriseUpgrade.Movment.Water {
+﻿namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	/// <summary>
 	/// Beinhaltet informationen zu den angrenzenden Blöcken einer Mehr-Block-Struktur.
 	/// </summary>

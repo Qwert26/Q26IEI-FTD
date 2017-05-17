@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-namespace IndustrialEnterpriseUpgrade.Movment.Water {
+namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	public class HydrofoilNode : GovernedNode<HydrofoilController> {
 		public List<HydrofoilActuator> topActuators,bottomActuators,leftActuators,rightActuators;
 		public HydrofoilNode(AllConstruct c, int maxComponentCount, HydrofoilController B) : base(c, maxComponentCount, B) {
