@@ -15,19 +15,11 @@
 			}
 		}
 		public AirshipAIParameters parameters;
-		public enum BaseState {
-			ENGAGE,
-			FLEETMOVE,
-			PATROL,
-			SEARCH
-		}
-		public BaseState baseState;
 		/// <summary>
 		/// Greift den am höchsten priorisierten Feind an.
 		/// </summary>
 		/// <seealso cref="AiNode.GetTargetPositionInfoForEngagementTarget()"/>
 		public override void Engage() {
-			baseState = BaseState.ENGAGE;
 			TPI = Node.GetTargetPositionInfoForEngagementTarget();
 		}
 		/// <summary>
@@ -35,7 +27,6 @@
 		/// </summary>
 		/// <seealso cref="Force.GetWaypointToMoveTo()"/>
 		public override void FleetMove() {
-			baseState = BaseState.FLEETMOVE;
 			TPI = GetTargetPositionInfoForThisWayPoint(Node.MainConstruct.GetForce().GetWaypointToMoveTo());
 		}
 		/// <summary>
@@ -43,7 +34,6 @@
 		/// </summary>
 		/// <seealso cref="AiNode.GetRouteParameters()"/>
 		public override void Patrol() {
-			baseState = BaseState.PATROL;
 			PatrolRoutes routeParameters = Node.GetRouteParameters();
 			if(routeParameters != null) {
 				PatrolRoute route = routeParameters.GetSelectedRoute();
@@ -62,7 +52,6 @@
 		/// </summary>
 		/// <seealso cref="StaticPlayers.GetFriendlyPlayerPosition(ObjectId)"/>
 		public override void Search() {
-			baseState = BaseState.SEARCH;
 			TPI = GetTargetPositionInfoForThisWayPoint(StaticPlayers.GetFriendlyPlayerPosition(Node.GetTeam()));
 		}
 	}

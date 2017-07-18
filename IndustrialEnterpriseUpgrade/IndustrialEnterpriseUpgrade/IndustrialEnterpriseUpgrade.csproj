@@ -11,15 +11,18 @@
     <AssemblyName>IndustrialEnterpriseUpgrade</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,10 +50,6 @@
     <Compile Include="AI\AIAirshipAI.cs" />
     <Compile Include="AI\AIAirshipMovementCard.cs" />
     <Compile Include="AI\AirshipAIParameters.cs" />
-    <Compile Include="AI\AirshipStateMachine\AbstractAirshipAIState.cs" />
-    <Compile Include="AI\AirshipStateMachine\AirshipSearch.cs" />
-    <Compile Include="Framework\Statemachine\AbstractAIConstructableControlState.cs" />
-    <Compile Include="Framework\Statemachine\AbstractState.cs" />
     <Compile Include="IndustrialEnterpriseUpgradePlugin.cs" />
     <Compile Include="Movement\Water\HydrofoilActuator.cs" />
     <Compile Include="Movement\Water\HydrofoilComponent.cs" />
@@ -69,7 +68,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Weapons\" />
+    <Folder Include="Weapons\APS\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
