@@ -1,4 +1,6 @@
-﻿namespace IndustrialEnterpriseUpgrade.AI {
+﻿using System;
+namespace IndustrialEnterpriseUpgrade.AI {
+	[Serializable]
 	public class AirshipAIParameters {
 		#region Höheneinstellungen
 		/// <summary>
@@ -14,7 +16,8 @@
 		/// </summary>
 		public float idleHeight;
 		/// <summary>
-		/// Das Luftschiff fliegt IMMER auf der selben Höhe wie der Feind, um Kollsionen mit anderen Fahrzeugen oder dem Gelände zu vermeiden, wird es links oder rechts ausweichen.
+		/// Das Luftschiff fliegt IMMER auf der selben Höhe wie der Feind oder innerhalb seiner Grenzen, um Kollsionen mit anderen Fahrzeugen oder dem Gelände zu vermeiden,
+		/// wird es links oder rechts ausweichen.
 		/// </summary>
 		public bool lockHeight;
 		#endregion

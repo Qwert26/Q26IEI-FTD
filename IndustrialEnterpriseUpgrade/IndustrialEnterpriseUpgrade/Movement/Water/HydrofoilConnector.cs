@@ -32,6 +32,9 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			base.ItemSet();
 		}
 		public override void TagFeelerConnectRules(IConnectionTypes feeler) {
+			if(feeler == null) {
+				return;
+			}
 			base.TagFeelerConnectRules(feeler);
 			if(localActuatorOutput == enumDirections.left && feeler.LocalOutDirection.normalized == Vector3i.left) {
 				feeler.SetNoConnection(ConnectionType);
@@ -48,7 +51,10 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			}
 		}
 		public override void InspectFeelerBeforeDirection(HydrofoilFeeler feeler, Vector3i localDirection, int index) {
-			feeler.localActuatorOutput = localActuatorOutput;
+			if(feeler == null) {
+				return;
+			}
+			feeler.LocalActuatorOutput = localActuatorOutput;
 		}
 		public override InteractionReturn Secondary() {
 			InteractionReturn ret;

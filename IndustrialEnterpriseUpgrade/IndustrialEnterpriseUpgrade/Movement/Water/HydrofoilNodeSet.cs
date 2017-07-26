@@ -1,7 +1,7 @@
 ﻿using System;
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	public class HydrofoilNodeSet : GovernedSetManager<HydrofoilNode, HydrofoilFeeler, HydrofoilConnectedTypeInfo, HydrofoilController> {
-		public HydrofoilNodeSet(MainConstruct C) : base(C) {
+		public HydrofoilNodeSet(MainConstruct construct) : base(construct) {
 			//Die GUID muss von der Definition der ItemGroup kommen! Ist der Aufruf jedoch wirklich notwendig?
 			HookUpRefreshFunctionToAChangeListener(new Guid("2909bf37-d528-4d64-951f-cc45c3b142b3"),1);
 		}

@@ -24,10 +24,10 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// <summary>
 		/// Die Zeitpunkte, wann jeweils <see cref="roll"/>, <see cref="pitch"/> oder <see cref=" yaw"/> zuletzt gesetzt worden sind.
 		/// </summary>
-		private float lastRollSet = -1f, lastPitchSet = -1f, lastYawSet = -1f;
+		//private float lastRollSet = -1f, lastPitchSet = -1f, lastYawSet = -1f;
 		#endregion
 		#region Tuning
-		private float deltaTimeMultipliaktor;
+		//private float deltaTimeMultipliaktor;
 		#endregion
 		private static HydrofoilNodeSet construct(MainConstruct mc) {
 			return new HydrofoilNodeSet(mc);
@@ -37,13 +37,17 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			set;
 		}
 		public override void StateChanged(IBlockStateChange change) {
+			if(change == null) {
+				return;
+			}
 			base.StateChanged(change);
 			if(change.IsAvailableToConstruct) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
 				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,construct).AddSender(this);
 				//MainConstruct.iControls.AileronStore.Add(this); Leider aktuell nicht möglich und das erstellen einer Mock-Up-Klasse, die Aileron erweitert, ist auch nicht möglich, da die nötigen Methoden nicht überschrieben werden können.
-				MainConstruct.iControls.AirElevatorStore.Add(this);
-				MainConstruct.iControls.AirRudderStore.Add(this);
+				//MainConstruct.iControls.AirElevatorStore.Add(this);
+				//MainConstruct.iControls.AirRudderStore.Add(this);
+
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
 				MainConstruct.iScheduler.RegisterForFixedUpdateTwo(new Action<float>(FixedUpdate));
 			}
@@ -51,74 +55,100 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
 				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,construct).RemoveSender(this);
 				//MainConstruct.iControls.AileronStore.Remove(this); Leider aktuell nicht möglich und das erstellen einer Mock-Up-Klasse, die Aileron erweitert, ist auch nicht möglich, da die nötigen Methoden nicht überschrieben werden können.
-				MainConstruct.iControls.AirElevatorStore.Remove(this);
-				MainConstruct.iControls.AirRudderStore.Remove(this);
+				//MainConstruct.iControls.AirElevatorStore.Remove(this);
+				//MainConstruct.iControls.AirRudderStore.Remove(this);
+
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
 				MainConstruct.iScheduler.UnregisterForFixedUpdateTwo(new Action<float>(FixedUpdate));
 			}
 		}
 		public override void BlockStart() {
 			//Dieser künstliche Lag ist notwendig für die Funktion! Er muss mindestens 1 betragen!
-			deltaTimeMultipliaktor=item.Code.Variables.GetFloat("dtMultiplikator", 1);
+			//deltaTimeMultipliaktor=item.Code.Variables.GetFloat("dtMultiplikator", 1);
 		}
 		public void FixedUpdate(float deltaTime) {
-			{//Sind wir schon im nächsten Zeitschritt? Wurden die Steuereingaben verändert?
-				float fixedTime = Time.fixedTime-deltaTimeMultipliaktor*Time.fixedDeltaTime;
-				if(fixedTime > lastPitchSet) {
-					pitch = 0;
+			{//Wir verwenden dieselbe Funktionsweise wie die Klasse "ControlBlock", auch bekannt als ACB.
+				yaw = MainConstruct.iControls.Last.Max(ControlType.Right);
+				if(yaw == 0) {
+					yaw = -MainConstruct.iControls.Last.Max(ControlType.Left);
 				}
-				if(fixedTime > lastRollSet) {
-					roll = 0;
+				pitch = MainConstruct.iControls.Last.Max(ControlType.Up);
+				if(pitch == 0) {
+					pitch = -MainConstruct.iControls.Last.Max(ControlType.Down);
 				}
-				if(fixedTime > lastYawSet) {
-					yaw = 0;
+				roll = MainConstruct.iControls.Last.Max(ControlType.RollRight);
+				if(roll == 0) {
+					roll = -MainConstruct.iControls.Last.Max(ControlType.RollLeft);
 				}
+				//HUD.InfoStore.Add(new InfoSnippet("Yaw,Pitch,Roll ist aktuell "+yaw+","+pitch+","+roll+".",1));
 			}
 			{//Berechne alle nötigen Winkel und setze die Aktuatoren.
 				float angle = 0;
 				angle = topPitch * pitch + topRoll * roll + topYaw * yaw;
-				foreach(HydrofoilActuator actuator in Node.topActuators) {
+				//HUD.InfoStore.Add(new InfoSnippet("Winkel für oben ist "+angle+"."));
+				foreach(HydrofoilActuator actuator in Node.TopActuators) {
 					actuator.SetAngle(angle);
 				}
 				angle = bottomPitch * pitch + bottomRoll * roll + bottomYaw * yaw;
-				foreach(HydrofoilActuator actuator in Node.bottomActuators) {
+				//HUD.InfoStore.Add(new InfoSnippet("Winkel für unten ist "+angle+"."));
+				foreach(HydrofoilActuator actuator in Node.BottomActuators) {
 					actuator.SetAngle(angle);
 				}
 				angle = leftPitch * pitch + leftRoll * roll + leftYaw * yaw;
-				foreach(HydrofoilActuator actuator in Node.leftActuators) {
+				//HUD.InfoStore.Add(new InfoSnippet("Winkel für links ist "+angle+"."));
+				foreach(HydrofoilActuator actuator in Node.LeftActuators) {
 					actuator.SetAngle(angle);
 				}
 				angle = rightPitch * pitch + rightRoll * roll + rightYaw * yaw;
-				foreach(HydrofoilActuator actuator in Node.rightActuators) {
+				//HUD.InfoStore.Add(new InfoSnippet("Winkel für rechts ist " + angle + "."));
+				foreach(HydrofoilActuator actuator in Node.RightActuators) {
 					actuator.SetAngle(angle);
 				}
 			}
 		}
 		#region Implementierung von IAileron
-		public void RollLeft(float factor = 1) {
+		public void RollLeft() {
+			RollLeft(1);
+		}
+		public void RollLeft(float factor) {
 			RollRight(-factor);
 		}
-		public void RollRight(float factor = 1) {
+		public void RollRight() {
+			RollRight(1);
+		}
+		public void RollRight(float factor) {
 			roll = factor;
-			lastRollSet = Time.fixedTime;
+			//lastRollSet = Time.fixedTime;
 		}
 		#endregion
 		#region Implementierung von IAirElevator
-		public void NoseUp(float f=1) {
-			pitch = f;
-			lastPitchSet = Time.fixedTime;
+		public void NoseUp() {
+			NoseUp(1);
 		}
-		public void NoseDown(float f=1) {
+		public void NoseUp(float f) {
+			pitch = f;
+			//lastPitchSet = Time.fixedTime;
+		}
+		public void NoseDown() {
+			NoseDown(1);
+		}
+		public void NoseDown(float f) {
 			NoseUp(-f);
 		}
 		#endregion
 		#region Implementierung von IAirRudder
-		public void YawLeft(float f=1) {
+		public void YawLeft() {
+			YawLeft(1);
+		}
+		public void YawLeft(float f) {
 			YawRight(-f);
 		}
-		public void YawRight(float f=1) {
+		public void YawRight() {
+			YawRight(1);
+		}
+		public void YawRight(float f) {
 			yaw = f;
-			lastYawSet = Time.fixedTime;
+			//lastYawSet = Time.fixedTime;
 		}
 		#endregion
 		#region Nutzerinteraktion
@@ -131,7 +161,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			ret.SpecialNameField = "Hydrofoil controller";
 			ret.SpecialBasicDescriptionField = "Central piece for AI-controllable Hydrofoils";
 			ret.AddExtraLine("Press <<Q>> to open the configuration GUI.");
-			ret.AddExtraLine("<!Currently unable to hook itself into the roll-controls.!> Because it is not an Aileron!");
 			return ret;
 		}
 		/// <summary>
@@ -144,12 +173,11 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// <summary>
 		/// Der Mauszeiger ist nun über die Schaltfläche für das Auswählen des Blocks.
 		/// </summary>
-		/// <returns>Informationen über den Block, damit der Nutzer entscheiden, ob er ihn jetzt braucht oder nicht.</returns>
+		/// <returns>Informationen über den Block, damit der Nutzer entscheiden kann, ob er ihn jetzt braucht oder nicht.</returns>
 		public override BlockTechInfo GetTechInfo() {
 			return new BlockTechInfo().
 				AddSpec("Maximum total Angle", 45).
-				AddStatement("Allows Aerial AIs to take control of special Hydrofoils, which have also limited angles. This provides greater control than ACBs.").
-				AddStatement("Currently is unable to hook itself into the roll-controls. Because is not an Aileron!");
+				AddStatement("Allows AIs to take control of special Hydrofoils, which have also limited angles. This provides greater control than ACBs.");
 		}
 		/// <summary>
 		/// Erstellt eine GUI, mit dem der Nutzer interagieren kann.
@@ -160,45 +188,45 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			GUISliders.DecimalPlaces = 1;
 			GUISliders.TotalWidthOfWindow = 1280;
 			GUISliders.TextWidth = 40;
-			float allowance;
+			float allow;
 			#region Einstellung für oben
 			GUILayout.BeginHorizontal();
-			allowance = this.allowance(topYaw, topRoll);
-			topPitch=GUISliders.LayoutDisplaySlider("T-P",topPitch,-allowance,allowance,enumMinMax.none,new ToolTip("The maximum absolute angle for Hydrofoils on the top when only a pitch up or down is issued."));
-			allowance = this.allowance(topPitch, topRoll);
-			topYaw = GUISliders.LayoutDisplaySlider("T-Y", topYaw, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the top when only a yaw left or right is issued."));
-			allowance = this.allowance(topPitch, topYaw);
-			topRoll = GUISliders.LayoutDisplaySlider("T-R", topRoll, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the top when only a roll left or right is issued."));
+			allow = Allowance(topYaw, topRoll);
+			topPitch=GUISliders.LayoutDisplaySlider("T-P",topPitch,-allow,allow,enumMinMax.none,new ToolTip("The maximum absolute angle for Hydrofoils on the top when only a pitch up or down is issued."));
+			allow = Allowance(topPitch, topRoll);
+			topYaw = GUISliders.LayoutDisplaySlider("T-Y", topYaw, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the top when only a yaw left or right is issued."));
+			allow = Allowance(topPitch, topYaw);
+			topRoll = GUISliders.LayoutDisplaySlider("T-R", topRoll, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the top when only a roll left or right is issued."));
 			GUILayout.EndHorizontal();
 			#endregion
 			#region Einstellung für unten
 			GUILayout.BeginHorizontal();
-			allowance = this.allowance(bottomYaw, bottomRoll);
-			bottomPitch = GUISliders.LayoutDisplaySlider("B-P", bottomPitch, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the bottom when only a pitch up or down is issued."));
-			allowance = this.allowance(bottomPitch, bottomRoll);
-			bottomYaw = GUISliders.LayoutDisplaySlider("B-Y", bottomYaw, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the bottom when only a yaw left or right is issued."));
-			allowance = this.allowance(bottomPitch, bottomYaw);
-			bottomRoll = GUISliders.LayoutDisplaySlider("B-R", bottomRoll, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the bottom when only a roll left or right is issued."));
+			allow = Allowance(bottomYaw, bottomRoll);
+			bottomPitch = GUISliders.LayoutDisplaySlider("B-P", bottomPitch, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the bottom when only a pitch up or down is issued."));
+			allow = Allowance(bottomPitch, bottomRoll);
+			bottomYaw = GUISliders.LayoutDisplaySlider("B-Y", bottomYaw, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the bottom when only a yaw left or right is issued."));
+			allow = Allowance(bottomPitch, bottomYaw);
+			bottomRoll = GUISliders.LayoutDisplaySlider("B-R", bottomRoll, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the bottom when only a roll left or right is issued."));
 			GUILayout.EndHorizontal();
 			#endregion
 			#region Einstellung für links
 			GUILayout.BeginHorizontal();
-			allowance = this.allowance(leftYaw, leftRoll);
-			leftPitch = GUISliders.LayoutDisplaySlider("L-P", leftPitch, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the left when only a pitch up or down is issued."));
-			allowance = this.allowance(leftPitch, leftRoll);
-			leftYaw = GUISliders.LayoutDisplaySlider("L-Y", leftYaw, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the left when only a yaw left or right is issued."));
-			allowance = this.allowance(leftPitch, leftYaw);
-			leftRoll = GUISliders.LayoutDisplaySlider("L-R", leftRoll, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the left when only a roll left or right is issued."));
+			allow = Allowance(leftYaw, leftRoll);
+			leftPitch = GUISliders.LayoutDisplaySlider("L-P", leftPitch, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the left when only a pitch up or down is issued."));
+			allow = Allowance(leftPitch, leftRoll);
+			leftYaw = GUISliders.LayoutDisplaySlider("L-Y", leftYaw, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the left when only a yaw left or right is issued."));
+			allow = Allowance(leftPitch, leftYaw);
+			leftRoll = GUISliders.LayoutDisplaySlider("L-R", leftRoll, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the left when only a roll left or right is issued."));
 			GUILayout.EndHorizontal();
 			#endregion
 			#region Einstellung für rechts
 			GUILayout.BeginHorizontal();
-			allowance = this.allowance(rightYaw, rightRoll);
-			rightPitch = GUISliders.LayoutDisplaySlider("R-P", rightPitch, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the right when only a pitch up or down is issued."));
-			allowance = this.allowance(rightPitch, rightRoll);
-			rightYaw = GUISliders.LayoutDisplaySlider("R-Y", rightYaw, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the right when only a yaw left or right is issued."));
-			allowance = this.allowance(rightPitch, rightYaw);
-			rightRoll = GUISliders.LayoutDisplaySlider("R-R", rightRoll, -allowance, allowance, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the right when only a roll left or right is issued."));
+			allow = Allowance(rightYaw, rightRoll);
+			rightPitch = GUISliders.LayoutDisplaySlider("R-P", rightPitch, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the right when only a pitch up or down is issued."));
+			allow = Allowance(rightPitch, rightRoll);
+			rightYaw = GUISliders.LayoutDisplaySlider("R-Y", rightYaw, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the right when only a yaw left or right is issued."));
+			allow = Allowance(rightPitch, rightYaw);
+			rightRoll = GUISliders.LayoutDisplaySlider("R-R", rightRoll, -allow, allow, enumMinMax.none, new ToolTip("The maximum absolute angle for Hydrofoils on the right when only a roll left or right is issued."));
 			GUILayout.EndHorizontal();
 			#endregion
 			#region Vorlagen
@@ -232,7 +260,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			}
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("Roll control(currently not functioning...)")) {
+			if(GUILayout.Button("Roll control")) {
 				topRoll = leftRoll = 45f;
 				bottomRoll = rightRoll = -45f;
 				topPitch = topYaw = bottomPitch = bottomYaw = leftPitch = leftYaw = rightPitch = rightYaw = 0f;
@@ -241,13 +269,14 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			GUILayout.EndVertical();
 			#endregion
 			bool ret = false;
-			if(ret = GuiCommon.DisplayCloseButton(1280)) {
+			if(GuiCommon.DisplayCloseButton(1280)) {
+				ret = true;
 				GUISoundManager.GetSingleton().PlayBeep();
 			}
 			GUILayout.EndArea();
 			return ret;
 		}
-		private float allowance(float angle1, float angle2) {
+		public static float Allowance(float angle1, float angle2) {
 			return 45f - (Mathf.Abs(angle1) + Mathf.Abs(angle2));
 		}
 		/// <summary>
@@ -263,7 +292,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			base.StuffChangedSyncIt();
 			GetConstructableOrSubConstructable().iMultiplayerSyncroniser.RPCRequest_SyncroniseBlock(this,topPitch,topYaw,topRoll,bottomPitch,bottomYaw,bottomRoll,leftPitch,leftYaw,leftRoll,rightPitch,rightYaw,rightRoll,0);
 		}
-		public override void SyncroniseUpdate(float tp,float ty,float tr,float bp,float by,float br,float lp,float ly,float lr,float rp,float ry,float rr,float ignored=0) {
+		public override void SyncroniseUpdate(float tp,float ty,float tr,float bp,float by,float br,float lp,float ly,float lr,float rp,float ry,float rr,float ignored) {
 			topPitch = tp;
 			topYaw = ty;
 			topRoll = tr;
@@ -284,6 +313,10 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// </summary>
 		/// <param name="v"></param>
 		public override void SetExtraInfo(ExtraInfoArrayReadPackage v) {
+			if(v == null) {
+				return;
+			}
+			base.SetExtraInfo(v);
 			if(v.FindDelimiterAndSpoolToIt(DelimiterType.FirstTier)) {
 				int elements = v.ElementsToDelimiterIfThereIsOneOrEndOfArrayIfNot(DelimiterType.FirstTier);
 				if(elements >= 12) {
@@ -307,6 +340,10 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// </summary>
 		/// <param name="v"></param>
 		public override void GetExtraInfo(ExtraInfoArrayWritePackage v) {
+			if(v == null) {
+				return;
+			}
+			base.GetExtraInfo(v);
 			v.AddDelimiterOpen(DelimiterType.FirstTier);
 			v.WriteNextFloat(topPitch);
 			v.WriteNextFloat(topYaw);
@@ -321,6 +358,13 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			v.WriteNextFloat(rightYaw);
 			v.WriteNextFloat(rightRoll);
 			v.AddDelimiterClose(DelimiterType.FirstTier);
+		}
+		public override void LoadWithoutState() {
+			base.LoadWithoutState();
+			topPitch = topRoll = topYaw = 0;
+			bottomPitch = bottomRoll = bottomYaw = 0;
+			leftPitch = leftRoll = leftYaw = 0;
+			rightPitch = rightRoll = rightYaw = 0;
 		}
 		#endregion
 	}

@@ -2,13 +2,13 @@
 using UnityEngine;
 namespace IndustrialEnterpriseUpgrade.AI {
 	public class AIAirshipMovementCard : AICard {
-		public AIAirshipAI airshipAi;
-		public AirshipAIParameters airshipParameters;
+		private AIAirshipAI airshipAi;
+		private AirshipAIParameters airshipParameters;
 		public override void ComponentStart() {
 			base.ComponentStart();
 			airshipAi = new AIAirshipAI();
 			airshipParameters = new AirshipAIParameters();
-			airshipAi.parameters = airshipParameters;
+			airshipAi.Parameters = airshipParameters;
 		}
 		/// <summary>
 		/// Diese Karte ist nun mit einem Mainframe verbunden.
@@ -24,7 +24,7 @@ namespace IndustrialEnterpriseUpgrade.AI {
 		public override InteractionReturn Secondary() {
 			InteractionReturn ret=base.Secondary();
 			ret.SpecialNameField = "Airship movement algorithm Card";
-			ret.SpecialBasicDescriptionField = "Provides customisable airship AI for blimps. Allows user selectable modes such as COMBAT and PATROL";
+			ret.SpecialBasicDescriptionField = "Provides customisable airship AI for blimps and zeppelins. Allows user selectable modes such as COMBAT and PATROL";
 			ret.AddExtraLine("Press <<Q>> to adjust this algorithm");
 			return ret;
 		}
@@ -48,6 +48,9 @@ namespace IndustrialEnterpriseUpgrade.AI {
 		/// <param name="v">Das Packet, in dem die Informationen geschrieben werden sollen.</param>
 		public override void GetExtraInfo(ExtraInfoArrayWritePackage v) {
 			base.GetExtraInfo(v);
+			if(v == null) {
+				return;
+			}
 			v.AddDelimiterOpen(DelimiterType.Card);
 			v.WriteNextFloat(airshipParameters.maxHeight);
 			v.WriteNextFloat(airshipParameters.minHeight);
@@ -61,8 +64,14 @@ namespace IndustrialEnterpriseUpgrade.AI {
 		/// <param name="v">Das Packet, aus dem die Informationen gelesen werden sollen.</param>
 		public override void SetExtraInfo(ExtraInfoArrayReadPackage v) {
 			base.SetExtraInfo(v);
-			if(v.FindDelimiterAndSpoolToIt(DelimiterType.Card)) {
+			if(v!=null&&v.FindDelimiterAndSpoolToIt(DelimiterType.Card)) {
 				int size = v.ElementsToDelimiterIfThereIsOneOrEndOfArrayIfNot(DelimiterType.Card);
+				if(size >= 4) {
+					airshipParameters.maxHeight = v.GetNextFloat();
+					airshipParameters.minHeight = v.GetNextFloat();
+					airshipParameters.idleHeight = v.GetNextFloat();
+					airshipParameters.lockHeight = v.GetNextBool();
+				}
 			}
 		}
 	}
