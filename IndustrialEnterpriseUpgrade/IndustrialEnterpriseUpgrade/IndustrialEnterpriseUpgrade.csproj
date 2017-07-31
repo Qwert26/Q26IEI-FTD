@@ -61,6 +61,13 @@
     <Compile Include="Movement\Water\HydrofoilFeeler.cs" />
     <Compile Include="Movement\Water\HydrofoilNode.cs" />
     <Compile Include="Movement\Water\HydrofoilNodeSet.cs" />
+    <Compile Include="Movement\Water\VoithSchneiderComponent.cs" />
+    <Compile Include="Movement\Water\VoithSchneiderConnectedTypeInfo.cs" />
+    <Compile Include="Movement\Water\VoithSchneiderConnectionTypes.cs" />
+    <Compile Include="Movement\Water\VoithSchneiderEngine.cs" />
+    <Compile Include="Movement\Water\VoithSchneiderFeeler.cs" />
+    <Compile Include="Movement\Water\VoithSchneiderNode.cs" />
+    <Compile Include="Movement\Water\VoithSchneiderNodeSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
