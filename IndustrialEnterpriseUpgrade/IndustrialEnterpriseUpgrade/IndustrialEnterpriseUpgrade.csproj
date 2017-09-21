@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IndustrialEnterpriseUpgrade</RootNamespace>
     <AssemblyName>IndustrialEnterpriseUpgrade</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,13 +62,6 @@
     <Compile Include="Movement\Water\HydrofoilFeeler.cs" />
     <Compile Include="Movement\Water\HydrofoilNode.cs" />
     <Compile Include="Movement\Water\HydrofoilNodeSet.cs" />
-    <Compile Include="Movement\Water\VoithSchneiderComponent.cs" />
-    <Compile Include="Movement\Water\VoithSchneiderConnectedTypeInfo.cs" />
-    <Compile Include="Movement\Water\VoithSchneiderConnectionTypes.cs" />
-    <Compile Include="Movement\Water\VoithSchneiderEngine.cs" />
-    <Compile Include="Movement\Water\VoithSchneiderFeeler.cs" />
-    <Compile Include="Movement\Water\VoithSchneiderNode.cs" />
-    <Compile Include="Movement\Water\VoithSchneiderNodeSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

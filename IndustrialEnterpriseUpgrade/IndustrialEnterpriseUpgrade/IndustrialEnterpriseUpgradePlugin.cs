@@ -9,7 +9,7 @@ namespace IndustrialEnterpriseUpgrade {
 		}
 		public Version version {
 			get {
-				return new Version("2.0.0.0");
+				return new Version("2.1.0.0");
 			}
 		}
 		/// <summary>
@@ -21,6 +21,8 @@ namespace IndustrialEnterpriseUpgrade {
 		/// <summary>
 		/// Das Spiel wird beendet und das Plugin sollte nun Sachen abspeichern.
 		/// </summary>
-		public void OnSave() {}
+		public void OnSave() {
+			Debug.Log(name+" didn´t saved anything.");
+		}
 	}
 }
