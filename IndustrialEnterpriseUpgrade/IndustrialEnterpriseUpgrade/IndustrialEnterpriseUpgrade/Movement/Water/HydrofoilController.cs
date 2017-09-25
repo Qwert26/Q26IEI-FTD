@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
-	public class HydrofoilController : Block, IGoverningBlock, IGoverningBlock<HydrofoilNode>, IAileron, IAirElevator, IAirRudder {
+	public class HydrofoilController : Block, IGoverningBlock<HydrofoilNode>, IAileron, IAirElevator, IAirRudder {
 		#region Steuervariablen
 		private float topPitch, topYaw, topRoll;
 		private float bottomPitch, bottomYaw, bottomRoll;
@@ -29,7 +29,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		#region Tuning
 		//private float deltaTimeMultipliaktor;
 		#endregion
-		private static HydrofoilNodeSet construct(MainConstruct mc) {
+		private static HydrofoilNodeSet Construct(MainConstruct mc) {
 			return new HydrofoilNodeSet(mc);
 		}
 		public HydrofoilNode Node {
@@ -43,7 +43,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			base.StateChanged(change);
 			if(change.IsAvailableToConstruct) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
-				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,construct).AddSender(this);
+				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).AddSender(this);
 				//MainConstruct.iControls.AileronStore.Add(this); Leider aktuell nicht möglich und das erstellen einer Mock-Up-Klasse, die Aileron erweitert, ist auch nicht möglich, da die nötigen Methoden nicht überschrieben werden können.
 				//MainConstruct.iControls.AirElevatorStore.Add(this);
 				//MainConstruct.iControls.AirRudderStore.Add(this);
@@ -53,7 +53,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			}
 			if(change.IsLostToConstructOrConstructLost) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
-				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,construct).RemoveSender(this);
+				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).RemoveSender(this);
 				//MainConstruct.iControls.AileronStore.Remove(this); Leider aktuell nicht möglich und das erstellen einer Mock-Up-Klasse, die Aileron erweitert, ist auch nicht möglich, da die nötigen Methoden nicht überschrieben werden können.
 				//MainConstruct.iControls.AirElevatorStore.Remove(this);
 				//MainConstruct.iControls.AirRudderStore.Remove(this);

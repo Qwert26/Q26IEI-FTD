@@ -41,7 +41,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -52,6 +51,7 @@
     <Compile Include="AI\AIAirshipAI.cs" />
     <Compile Include="AI\AIAirshipMovementCard.cs" />
     <Compile Include="AI\AirshipAIParameters.cs" />
+    <Compile Include="AI\AIThrustercraftAI.cs" />
     <Compile Include="IndustrialEnterpriseUpgradePlugin.cs" />
     <Compile Include="Movement\Water\HydrofoilActuator.cs" />
     <Compile Include="Movement\Water\HydrofoilComponent.cs" />
@@ -63,6 +63,11 @@
     <Compile Include="Movement\Water\HydrofoilNode.cs" />
     <Compile Include="Movement\Water\HydrofoilNodeSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
