@@ -11,11 +11,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			base.ComponentStart();
 			foilModel = CarryThisWithUs(0);
 		}
-		protected override int ConnectionType {
-			get {
-				return (int)HydrofoilConnectionTypes.Actuators;
-			}
-		}
+		protected override int ConnectionType => (int)HydrofoilConnectionTypes.Actuators;
 		public override void FeelerFlowDown(HydrofoilFeeler feeler) {
 			if(feeler == null) {
 				return;

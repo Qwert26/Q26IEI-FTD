@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
-	public class HydrofoilController : Block, IGoverningBlock<HydrofoilNode>, IAileron, IAirElevator, IAirRudder {
+	public class HydrofoilController : Block, IGoverningBlock<HydrofoilNode> {
 		#region Steuervariablen
 		private float topPitch, topYaw, topRoll;
 		private float bottomPitch, bottomYaw, bottomRoll;
@@ -21,13 +21,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// Positive Werte meinen eine Kurve nach rechts.
 		/// </summary>
 		private float yaw;
-		/// <summary>
-		/// Die Zeitpunkte, wann jeweils <see cref="roll"/>, <see cref="pitch"/> oder <see cref=" yaw"/> zuletzt gesetzt worden sind.
-		/// </summary>
-		//private float lastRollSet = -1f, lastPitchSet = -1f, lastYawSet = -1f;
-		#endregion
-		#region Tuning
-		//private float deltaTimeMultipliaktor;
 		#endregion
 		private static HydrofoilNodeSet Construct(MainConstruct mc) {
 			return new HydrofoilNodeSet(mc);
@@ -61,10 +54,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
 				MainConstruct.iScheduler.UnregisterForFixedUpdateTwo(new Action<float>(FixedUpdate));
 			}
-		}
-		public override void BlockStart() {
-			//Dieser künstliche Lag ist notwendig für die Funktion! Er muss mindestens 1 betragen!
-			//deltaTimeMultipliaktor=item.Code.Variables.GetFloat("dtMultiplikator", 1);
 		}
 		public void FixedUpdate(float deltaTime) {
 			{//Wir verwenden dieselbe Funktionsweise wie die Klasse "ControlBlock", auch bekannt als ACB.
@@ -106,51 +95,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 				}
 			}
 		}
-		#region Implementierung von IAileron
-		public void RollLeft() {
-			RollLeft(1);
-		}
-		public void RollLeft(float factor) {
-			RollRight(-factor);
-		}
-		public void RollRight() {
-			RollRight(1);
-		}
-		public void RollRight(float factor) {
-			roll = factor;
-			//lastRollSet = Time.fixedTime;
-		}
-		#endregion
-		#region Implementierung von IAirElevator
-		public void NoseUp() {
-			NoseUp(1);
-		}
-		public void NoseUp(float f) {
-			pitch = f;
-			//lastPitchSet = Time.fixedTime;
-		}
-		public void NoseDown() {
-			NoseDown(1);
-		}
-		public void NoseDown(float f) {
-			NoseUp(-f);
-		}
-		#endregion
-		#region Implementierung von IAirRudder
-		public void YawLeft() {
-			YawLeft(1);
-		}
-		public void YawLeft(float f) {
-			YawRight(-f);
-		}
-		public void YawRight() {
-			YawRight(1);
-		}
-		public void YawRight(float f) {
-			yaw = f;
-			//lastYawSet = Time.fixedTime;
-		}
-		#endregion
 		#region Nutzerinteraktion
 		/// <summary>
 		/// Der Block ist nun im Zentrum des Fokus und sollte nun in kurzer Form alle nötigen Informationen darstellen.
@@ -340,9 +284,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// </summary>
 		/// <param name="v"></param>
 		public override void GetExtraInfo(ExtraInfoArrayWritePackage v) {
-			if(v == null) {
-				return;
-			}
 			base.GetExtraInfo(v);
 			v.AddDelimiterOpen(DelimiterType.FirstTier);
 			v.WriteNextFloat(topPitch);

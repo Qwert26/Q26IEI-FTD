@@ -5,12 +5,8 @@
 	public class HydrofoilFeeler : GenericFeeler<HydrofoilNode> {
 		private enumDirections localActuatorOutput;
 		public enumDirections LocalActuatorOutput {
-			get {
-				return localActuatorOutput;
-			}
-			set {
-				localActuatorOutput = value;
-			}
+			get => localActuatorOutput;
+			set => localActuatorOutput = value;
 		}
 		public HydrofoilFeeler(HydrofoilNode sender) : base(sender) {
 			localActuatorOutput = enumDirections.unknown;

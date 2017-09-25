@@ -2,11 +2,7 @@
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	public class HydrofoilConnector : HydrofoilComponent {
 		private enumDirections localActuatorOutput;
-		protected override int ConnectionType {
-			get {
-				return (int)HydrofoilConnectionTypes.Connectors;
-			}
-		}
+		protected override int ConnectionType => (int)HydrofoilConnectionTypes.Connectors;
 		public override void ComponentStart() {
 			base.ComponentStart();
 			int actuatorOutput = (int)item.Code.Variables.GetInt("ActuatorOutput", 0);
@@ -28,13 +24,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 					break;
 			}
 		}
-		public override void ItemSet() {
-			base.ItemSet();
-		}
 		public override void TagFeelerConnectRules(IConnectionTypes feeler) {
-			if(feeler == null) {
-				return;
-			}
 			base.TagFeelerConnectRules(feeler);
 			if(localActuatorOutput == enumDirections.left && feeler.LocalOutDirection.normalized == Vector3i.left) {
 				feeler.SetNoConnection(ConnectionType);
@@ -51,9 +41,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			}
 		}
 		public override void InspectFeelerBeforeDirection(HydrofoilFeeler feeler, Vector3i localDirection, int index) {
-			if(feeler == null) {
-				return;
-			}
 			feeler.LocalActuatorOutput = localActuatorOutput;
 		}
 		public override InteractionReturn Secondary() {
