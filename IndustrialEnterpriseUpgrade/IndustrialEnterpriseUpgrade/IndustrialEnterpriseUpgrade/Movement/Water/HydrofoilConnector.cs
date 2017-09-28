@@ -43,6 +43,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		public override void InspectFeelerBeforeDirection(HydrofoilFeeler feeler, Vector3i localDirection, int index) {
 			feeler.LocalActuatorOutput = localActuatorOutput;
 		}
+		#region Nutzerinteraktion
 		public override InteractionReturn Secondary() {
 			InteractionReturn ret;
 			if(LinkedUp) {
@@ -63,5 +64,9 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 				Node.GoverningBlock.Secondary(T);
 			}
 		}
+		public override BlockTechInfo GetTechInfo() {
+			return new BlockTechInfo().AddStatement("Connects the Hydrofoils Actuators on the outside with the controller on the inside.");
+		}
+		#endregion
 	}
 }

@@ -37,9 +37,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			if(change.IsAvailableToConstruct) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
 				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).AddSender(this);
-				//MainConstruct.iControls.AileronStore.Add(this); Leider aktuell nicht möglich und das erstellen einer Mock-Up-Klasse, die Aileron erweitert, ist auch nicht möglich, da die nötigen Methoden nicht überschrieben werden können.
-				//MainConstruct.iControls.AirElevatorStore.Add(this);
-				//MainConstruct.iControls.AirRudderStore.Add(this);
 
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
 				MainConstruct.iScheduler.RegisterForFixedUpdateTwo(new Action<float>(FixedUpdate));
@@ -47,49 +44,34 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			if(change.IsLostToConstructOrConstructLost) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
 				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).RemoveSender(this);
-				//MainConstruct.iControls.AileronStore.Remove(this); Leider aktuell nicht möglich und das erstellen einer Mock-Up-Klasse, die Aileron erweitert, ist auch nicht möglich, da die nötigen Methoden nicht überschrieben werden können.
-				//MainConstruct.iControls.AirElevatorStore.Remove(this);
-				//MainConstruct.iControls.AirRudderStore.Remove(this);
 
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
 				MainConstruct.iScheduler.UnregisterForFixedUpdateTwo(new Action<float>(FixedUpdate));
 			}
 		}
 		public void FixedUpdate(float deltaTime) {
-			{//Wir verwenden dieselbe Funktionsweise wie die Klasse "ControlBlock", auch bekannt als ACB.
-				yaw = MainConstruct.iControls.Last.Max(ControlType.Right);
-				if(yaw == 0) {
-					yaw = -MainConstruct.iControls.Last.Max(ControlType.Left);
-				}
-				pitch = MainConstruct.iControls.Last.Max(ControlType.Up);
-				if(pitch == 0) {
-					pitch = -MainConstruct.iControls.Last.Max(ControlType.Down);
-				}
-				roll = MainConstruct.iControls.Last.Max(ControlType.RollRight);
-				if(roll == 0) {
-					roll = -MainConstruct.iControls.Last.Max(ControlType.RollLeft);
-				}
-				//HUD.InfoStore.Add(new InfoSnippet("Yaw,Pitch,Roll ist aktuell "+yaw+","+pitch+","+roll+".",1));
+			{
+				//Wir verwenden dieselbe Funktionsweise wie die Klasse "ControlBlock", auch bekannt als ACB.
+				//Die Berechnung sorgen dafür, dass das gleichzeitige Drücken von gegensätzlichen Steuertasten sich gegenseitig auslöschen und somit keine Bewegung erfolgt.
+				yaw = MainConstruct.iControls.Last.Max(ControlType.Right)-MainConstruct.iControls.Last.Max(ControlType.Left);
+				pitch = MainConstruct.iControls.Last.Max(ControlType.Up)-MainConstruct.iControls.Last.Max(ControlType.Down);
+				roll = MainConstruct.iControls.Last.Max(ControlType.RollRight)-MainConstruct.iControls.Last.Max(ControlType.RollLeft);
 			}
 			{//Berechne alle nötigen Winkel und setze die Aktuatoren.
 				float angle = 0;
 				angle = topPitch * pitch + topRoll * roll + topYaw * yaw;
-				//HUD.InfoStore.Add(new InfoSnippet("Winkel für oben ist "+angle+"."));
 				foreach(HydrofoilActuator actuator in Node.TopActuators) {
 					actuator.SetAngle(angle);
 				}
 				angle = bottomPitch * pitch + bottomRoll * roll + bottomYaw * yaw;
-				//HUD.InfoStore.Add(new InfoSnippet("Winkel für unten ist "+angle+"."));
 				foreach(HydrofoilActuator actuator in Node.BottomActuators) {
 					actuator.SetAngle(angle);
 				}
 				angle = leftPitch * pitch + leftRoll * roll + leftYaw * yaw;
-				//HUD.InfoStore.Add(new InfoSnippet("Winkel für links ist "+angle+"."));
 				foreach(HydrofoilActuator actuator in Node.LeftActuators) {
 					actuator.SetAngle(angle);
 				}
 				angle = rightPitch * pitch + rightRoll * roll + rightYaw * yaw;
-				//HUD.InfoStore.Add(new InfoSnippet("Winkel für rechts ist " + angle + "."));
 				foreach(HydrofoilActuator actuator in Node.RightActuators) {
 					actuator.SetAngle(angle);
 				}
@@ -121,7 +103,8 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		public override BlockTechInfo GetTechInfo() {
 			return new BlockTechInfo().
 				AddSpec("Maximum total Angle", 45).
-				AddStatement("Allows AIs to take control of special Hydrofoils, which have also limited angles. This provides greater control than ACBs.");
+				AddStatement("Allows AIs to take control of special Hydrofoils, which have also limited angles. This provides greater control than ACBs.").
+				AddSpec("Maximum amount of components",Node.ComponentList.MaximumComponentCount);
 		}
 		/// <summary>
 		/// Erstellt eine GUI, mit dem der Nutzer interagieren kann.
@@ -232,10 +215,29 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		}
 		#endregion
 		#region Netzwerksynchronisation
+		/// <summary>
+		/// Die Parameter wurden von diesem Spieler geändert und sollten nun mit den anderen Spielern geteilt werden.
+		/// </summary>
 		public override void StuffChangedSyncIt() {
 			base.StuffChangedSyncIt();
 			GetConstructableOrSubConstructable().iMultiplayerSyncroniser.RPCRequest_SyncroniseBlock(this,topPitch,topYaw,topRoll,bottomPitch,bottomYaw,bottomRoll,leftPitch,leftYaw,leftRoll,rightPitch,rightYaw,rightRoll,0);
 		}
+		/// <summary>
+		/// Die Parameter wurden von einen anderen Spieler geändert und werden hier jetzt übernommen.
+		/// </summary>
+		/// <param name="tp">Der neue Wert für topPitch.</param>
+		/// <param name="ty">Der neue Wert für topYaw.</param>
+		/// <param name="tr">Der neue Wert für topRoll.</param>
+		/// <param name="bp">Der neue Wert für bottomPitch.</param>
+		/// <param name="by">Der neue Wert für bottomYaw.</param>
+		/// <param name="br">Der neue Wert für bottomRoll.</param>
+		/// <param name="lp">Der neue Wert für leftPitch.</param>
+		/// <param name="ly">Der neue Wert für leftYaw.</param>
+		/// <param name="lr">Der neue Wert für leftRoll.</param>
+		/// <param name="rp">Der neue Wert für rightPitch.</param>
+		/// <param name="ry">Der neue Wert für rightYaw.</param>
+		/// <param name="rr">Der neue Wert für rightRoll.</param>
+		/// <param name="ignored">Dieser Wert wird ignoriert. Es gibt keine überladene Methode mit 12 floats als Parameter.</param>
 		public override void SyncroniseUpdate(float tp,float ty,float tr,float bp,float by,float br,float lp,float ly,float lr,float rp,float ry,float rr,float ignored) {
 			topPitch = tp;
 			topYaw = ty;
@@ -257,9 +259,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// </summary>
 		/// <param name="v"></param>
 		public override void SetExtraInfo(ExtraInfoArrayReadPackage v) {
-			if(v == null) {
-				return;
-			}
 			base.SetExtraInfo(v);
 			if(v.FindDelimiterAndSpoolToIt(DelimiterType.FirstTier)) {
 				int elements = v.ElementsToDelimiterIfThereIsOneOrEndOfArrayIfNot(DelimiterType.FirstTier);
@@ -300,12 +299,12 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			v.WriteNextFloat(rightRoll);
 			v.AddDelimiterClose(DelimiterType.FirstTier);
 		}
+		/// <summary>
+		/// Der HydrofoilController hat nun seine abgespeicherten Parameter geladen und wird nun alle restlichen initialisieren, die vorher nicht abgespeichert worden sind.
+		/// </summary>
+		/// <seealso cref="SetExtraInfo(ExtraInfoArrayReadPackage)"/>
 		public override void LoadWithoutState() {
 			base.LoadWithoutState();
-			topPitch = topRoll = topYaw = 0;
-			bottomPitch = bottomRoll = bottomYaw = 0;
-			leftPitch = leftRoll = leftYaw = 0;
-			rightPitch = rightRoll = rightYaw = 0;
 		}
 		#endregion
 	}

@@ -65,16 +65,25 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 				GetConstructableOrSubConstructable().iScheduler.UnregisterForFixedUpdateThree(new Action<float>(FixedUpdatePhysics));
 			}
 		}
+		#region Nutzerinteraktion
 		public override InteractionReturn Secondary() {
-			InteractionReturn ret = new InteractionReturn();
-			ret.SpecialNameField = "Hydrofoil Actuator";
-			ret.SpecialBasicDescriptionField = "The Actuator is the one applying the force. Current angle is "+angle+".";
-			if(LinkedUp) {
+			InteractionReturn ret = new InteractionReturn {
+				SpecialNameField = "Hydrofoil Actuator",
+				SpecialBasicDescriptionField = "The Actuator is the one applying the force. Current angle is " + angle + "."
+			};
+			if (LinkedUp) {
 				ret.AddExtraLine("Currently linked up to a controller. Registered as "+register.ToString());
 			} else {
 				ret.AddExtraLine("<!Not linked up and thus stuck in its current angle!>");
 			}
 			return ret;
 		}
+		public override BlockTechInfo GetTechInfo() {
+			return new BlockTechInfo().AddSpec("Max force per Velocity",lift).
+				AddStatement("Its angle can only be changed when it is hooked up to a controller.").
+				AddStatement("All Hydrofoils of the same group of the same controller must have the same orientation!").
+				AddStatement("Only works when it is underwater!");
+		}
+		#endregion
 	}
 }
