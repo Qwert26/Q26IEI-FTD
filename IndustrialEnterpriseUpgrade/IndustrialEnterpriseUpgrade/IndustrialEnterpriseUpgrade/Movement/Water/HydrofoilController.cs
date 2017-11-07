@@ -30,9 +30,6 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			set;
 		}
 		public override void StateChanged(IBlockStateChange change) {
-			if(change == null) {
-				return;
-			}
 			base.StateChanged(change);
 			if(change.IsAvailableToConstruct) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!

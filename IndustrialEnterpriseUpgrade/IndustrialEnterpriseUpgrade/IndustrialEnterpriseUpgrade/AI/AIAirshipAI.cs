@@ -67,7 +67,7 @@ namespace IndustrialEnterpriseUpgrade.AI {
 			MoveToHeight(parameters.idleHeight);
 		}
 		private void AdjustAngles() {
-
+			//TODO
 		}
 		private void MoveToHeight(float height) {
 			CollisionWarning warningForObject = CollisionCheckManager.Instance.WarningManager.GetWarningForObject(Node.MainConstruct);

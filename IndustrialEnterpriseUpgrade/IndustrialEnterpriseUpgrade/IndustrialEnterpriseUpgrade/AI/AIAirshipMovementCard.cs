@@ -48,14 +48,22 @@ namespace IndustrialEnterpriseUpgrade.AI {
 		/// <param name="v">Das Packet, in dem die Informationen geschrieben werden sollen.</param>
 		public override void GetExtraInfo(ExtraInfoArrayWritePackage v) {
 			base.GetExtraInfo(v);
-			if(v == null) {
-				return;
-			}
+
 			v.AddDelimiterOpen(DelimiterType.Card);
 			v.WriteNextFloat(airshipParameters.maxHeight);
 			v.WriteNextFloat(airshipParameters.minHeight);
 			v.WriteNextFloat(airshipParameters.idleHeight);
 			v.WriteNextBool(airshipParameters.lockHeight);
+
+			v.WriteNextFloat(airshipParameters.maxDistance);
+			v.WriteNextFloat(airshipParameters.broadsideBeginMax);
+			v.WriteNextFloat(airshipParameters.broadsideBeginMin);
+			v.WriteNextFloat(airshipParameters.minDistance);
+			v.WriteNextFloat(airshipParameters.idleDistance);
+
+			v.WriteNextFloat(airshipParameters.upperStartAngle);
+			v.WriteNextFloat(airshipParameters.nominalAngle);
+			v.WriteNextFloat(airshipParameters.lowerStartAngle);
 			v.AddDelimiterClose(DelimiterType.Card);
 		}
 		/// <summary>
@@ -64,13 +72,25 @@ namespace IndustrialEnterpriseUpgrade.AI {
 		/// <param name="v">Das Packet, aus dem die Informationen gelesen werden sollen.</param>
 		public override void SetExtraInfo(ExtraInfoArrayReadPackage v) {
 			base.SetExtraInfo(v);
-			if(v!=null&&v.FindDelimiterAndSpoolToIt(DelimiterType.Card)) {
+			if(v.FindDelimiterAndSpoolToIt(DelimiterType.Card)) {
 				int size = v.ElementsToDelimiterIfThereIsOneOrEndOfArrayIfNot(DelimiterType.Card);
 				if(size >= 4) {
 					airshipParameters.maxHeight = v.GetNextFloat();
 					airshipParameters.minHeight = v.GetNextFloat();
 					airshipParameters.idleHeight = v.GetNextFloat();
 					airshipParameters.lockHeight = v.GetNextBool();
+				}
+				if (size >= 9) {
+					airshipParameters.maxDistance = v.GetNextFloat();
+					airshipParameters.broadsideBeginMax = v.GetNextFloat();
+					airshipParameters.broadsideBeginMin = v.GetNextFloat();
+					airshipParameters.minDistance = v.GetNextFloat();
+					airshipParameters.idleDistance = v.GetNextFloat();
+				}
+				if (size >= 12) {
+					airshipParameters.upperStartAngle = v.GetNextFloat();
+					airshipParameters.nominalAngle = v.GetNextFloat();
+					airshipParameters.lowerStartAngle = v.GetNextFloat();
 				}
 			}
 		}
