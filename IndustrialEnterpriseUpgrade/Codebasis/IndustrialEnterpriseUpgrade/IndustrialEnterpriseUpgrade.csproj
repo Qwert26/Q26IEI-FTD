@@ -53,6 +53,7 @@
     <Compile Include="AI\AirshipAIParameters.cs" />
     <Compile Include="AI\AIThrustercraftAI.cs" />
     <Compile Include="IndustrialEnterpriseUpgradePlugin.cs" />
+    <Compile Include="Movement\KinematicMeasure.cs" />
     <Compile Include="Movement\Water\HydrofoilActuator.cs" />
     <Compile Include="Movement\Water\HydrofoilComponent.cs" />
     <Compile Include="Movement\Water\HydrofoilConnectedTypeInfo.cs" />

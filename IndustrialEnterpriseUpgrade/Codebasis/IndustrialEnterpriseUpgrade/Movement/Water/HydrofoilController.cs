@@ -80,9 +80,10 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// </summary>
 		/// <returns>Den aktuellen Status, so kurz wie möglich.</returns>
 		public override InteractionReturn Secondary() {
-			InteractionReturn ret=new InteractionReturn();
-			ret.SpecialNameField = "Hydrofoil controller";
-			ret.SpecialBasicDescriptionField = "Central piece for AI-controllable Hydrofoils";
+			InteractionReturn ret = new InteractionReturn {
+				SpecialNameField = "Hydrofoil controller",
+				SpecialBasicDescriptionField = "Central piece for AI-controllable Hydrofoils"
+			};
 			ret.AddExtraLine("Press <<Q>> to open the configuration GUI.");
 			return ret;
 		}
