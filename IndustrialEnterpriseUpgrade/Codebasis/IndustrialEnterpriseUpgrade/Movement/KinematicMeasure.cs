@@ -3,8 +3,10 @@ using System;
 namespace IndustrialEnterpriseUpgrade.Movement {
 	public class KinematicMeasure : Block {
 		private static string[] NAMES = new string[] {"velocity","acceleration","jerk","jounce"};
+		private const string INFINITY = "Unlimited";
 		private Vector3[] lastMeasurements=new Vector3[NAMES.Length];
 		private float[] limits = new float[NAMES.Length];
+		private Vector2 scrollPosition;
 		public override void BlockStart() {
 			base.BlockStart();
 			for (int i = 0; i < limits.Length; i++) {
@@ -54,6 +56,20 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 		}
 		public override bool ExtraGUI() {
 			GUILayout.BeginArea(new Rect(0,0,320,800),"Limit settings",GUI.skin.window);
+			scrollPosition=GUILayout.BeginScrollView(scrollPosition,false,true);
+			for (int i = 0; i < NAMES.Length; i++) {
+				GUILayout.Box("Limit for "+NAMES[i]+":");
+				string input;
+				if (float.IsInfinity(limits[i])) {
+					input = GUILayout.TextField(INFINITY);
+				} else {
+					input = GUILayout.TextField(limits[i].ToString());
+				}
+				if (!float.TryParse(input, out limits[i])) {
+					limits[i] = float.PositiveInfinity;
+				}
+			}
+			GUILayout.EndScrollView();
 			bool ret = false;
 			if (GuiCommon.DisplayCloseButton(320)) {
 				ret = true;
