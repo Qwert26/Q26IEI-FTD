@@ -40,7 +40,7 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 			};
 			ret.AddExtraLine("Press <<Q>> to open the configuration GUI.");
 			for (int i = 0; i < NAMES.Length; i++) {
-				if (limits[i] * limits[i] >= lastMeasurements[i].sqrMagnitude) {
+				if (limits[i] * limits[i] <= lastMeasurements[i].sqrMagnitude) {
 					ret.AddExtraLine("<!current " + NAMES[i] + " is " + lastMeasurements[i] + "!>");
 				} else {
 					ret.AddExtraLine("current "+NAMES[i]+" is "+lastMeasurements[i]);
