@@ -2,13 +2,21 @@
 using System;
 namespace IndustrialEnterpriseUpgrade.Movement {
 	public class KinematicMeasure : Block {
-		private static string[] NAMES = new string[] {"velocity","acceleration","jerk","jounce"};
+		private static string[] NAMES = new string[] {"velocity","acceleration","jerk","jounce","crackle","pop"};
 		private const string INFINITY = "Unlimited";
 		private Vector3[] lastLinearMeasurements=new Vector3[NAMES.Length];
 		private Vector3[] lastAngularMeasurements = new Vector3[NAMES.Length];
 		private float[] linearLimits = new float[NAMES.Length];
 		private float[] angularLimits = new float[NAMES.Length];
 		private Vector2 scrollPosition;
+		private int limit = NAMES.Length;
+		public override void BlockStart() {
+			base.BlockStart();
+			for (int i = 0; i < NAMES.Length; i++) {
+				linearLimits[i] = float.PositiveInfinity;
+				angularLimits[i] = float.PositiveInfinity;
+			}
+		}
 		public override void StateChanged(IBlockStateChange change) {
 			base.StateChanged(change);
 			if (change.IsAvailableToConstruct) {
@@ -21,7 +29,7 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 			Vector3[] currentLinearMeasurements = new Vector3[NAMES.Length];
 			currentLinearMeasurements[0] = MainConstruct.iPhysics.iVelocities.VelocityVector;
 			Vector3[] currentAngularMeasurements = new Vector3[NAMES.Length];
-			currentAngularMeasurements[0] = MainConstruct.iPhysics.iVelocities.AngularVelocity;
+			currentAngularMeasurements[0] = MainConstruct.iPhysics.iVelocities.AngularVelocity*Mathf.Rad2Deg;
 			for (int i=1;i<NAMES.Length;i++) {
 				currentLinearMeasurements[i] = (currentLinearMeasurements[i - 1] - lastLinearMeasurements[i - 1]) / deltaTime;
 				currentAngularMeasurements[i] = (currentAngularMeasurements[i - 1] - lastAngularMeasurements[i - 1]) / deltaTime;
@@ -36,12 +44,12 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 				SpecialBasicDescriptionField="Measures kinematic vectors."
 			};
 			ret.AddExtraLine("Press <<Q>> to open the configuration GUI.");
-			for (int i = 0; i < NAMES.Length; i++) {
-				string line;
+			for (int i = 0; i < Math.Min(NAMES.Length,limit); i++) {
+				string line="Current ";
 				if (linearLimits[i] * linearLimits[i] <= lastLinearMeasurements[i].sqrMagnitude) {
-					line = "Current <!linear " + NAMES[i] + " is " + lastLinearMeasurements[i] + "!>";
+					line += "<!linear " + NAMES[i] + " is " + lastLinearMeasurements[i] + "!>";
 				} else {
-					line = "Current linear " + NAMES[i] + " is " + lastLinearMeasurements[i];
+					line += "linear " + NAMES[i] + " is " + lastLinearMeasurements[i];
 				}
 				line += ", while ";
 				if (angularLimits[i] * angularLimits[i] <= lastAngularMeasurements[i].sqrMagnitude) {
@@ -55,15 +63,22 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 		}
 		public override BlockTechInfo GetTechInfo() {
 			return new BlockTechInfo().AddStatement("Measures current linear velocity, acceleration, jerk and jounce vectors.").
-				AddStatement("Also measures the angular variations of those.");
+				AddStatement("These are measured in m/s, m/s², m/s³ and so on.").
+				AddStatement("Also measures the angular velocity, acceleration, jerk and jounce vectors.").
+				AddStatement("These are measured in °/s, °/s², °/s³ and so on.");
 		}
 		public override void Secondary(Transform T){
 			new GenericBlockGUI().ActivateGui(this);
 		}
 		public override bool ExtraGUI() {
-			GUILayout.BeginArea(new Rect(0,0,320,800),"Limit settings",GUI.skin.window);
+			GUILayout.BeginArea(new Rect(0,0,640,800),"Limit settings",GUI.skin.window);
 			scrollPosition=GUILayout.BeginScrollView(scrollPosition,true,true);
-			for (int i = 0; i < NAMES.Length; i++) {
+			GUISliders.DecimalPlaces = 0;
+			GUISliders.TotalWidthOfWindow = 640;
+			GUILayout.BeginHorizontal();
+			limit=(int)GUISliders.LayoutDisplaySlider("stop after "+NAMES[limit-1],limit,1,NAMES.Length,enumMinMax.none,new ToolTip(NAMES[limit-1]+" and everything after it will not be displayed."));
+			GUILayout.EndHorizontal();
+			for (int i = 0; i < Math.Min(NAMES.Length,limit); i++) {
 				GUILayout.BeginHorizontal();
 				GUILayout.Box("Limit for linear " + NAMES[i] + ":");
 				GUILayout.Box("Limit for angular " + NAMES[i] + ":");
@@ -91,7 +106,7 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 			}
 			GUILayout.EndScrollView();
 			bool ret = false;
-			if (GuiCommon.DisplayCloseButton(320)) {
+			if (GuiCommon.DisplayCloseButton(640)) {
 				ret = true;
 				GUISoundManager.GetSingleton().PlayBeep();
 			}
