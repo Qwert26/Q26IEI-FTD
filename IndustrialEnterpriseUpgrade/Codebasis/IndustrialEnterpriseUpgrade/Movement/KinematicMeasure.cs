@@ -79,7 +79,7 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 			limit=(int)GUISliders.LayoutDisplaySlider("stop after "+NAMES[limit-1],limit,1,NAMES.Length,enumMinMax.none,new ToolTip(NAMES[limit-1]+" and everything after it will not be displayed."));
 			GUILayout.EndHorizontal();
 			for (int i = 0; i < Math.Min(NAMES.Length,limit); i++) {
-				GUILayout.BeginHorizontal();
+				GUILayout.BeginHorizontal(GUILayout.Width(640));
 				GUILayout.Box("Limit for linear " + NAMES[i] + ":");
 				GUILayout.Box("Limit for angular " + NAMES[i] + ":");
 				GUILayout.EndHorizontal();

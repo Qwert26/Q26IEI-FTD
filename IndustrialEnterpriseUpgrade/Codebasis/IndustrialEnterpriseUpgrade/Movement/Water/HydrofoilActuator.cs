@@ -45,7 +45,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			}
 		}
 		public void FixedUpdatePhysics(float deltaTime) {
-			float waterLevel = MainConstruct.iMainPhysics.WaterLevelArray[ArrayPosition.x, ArrayPosition.z];
+			float waterLevel = MainConstruct.iMainPhysics.WaterLevelArray.Read(LocalPosition.x,LocalPosition.z);
 			float forwardSpeed = MainConstruct.iMainPhysics.iVelocities.VelocityInParticularDirection(GameWorldForwards);
 			float relativeSubmersion = Mathf.Min(1, waterLevel + 0.5f - AltitudeAboveMeanSeaLevel);
 			if(relativeSubmersion > 0) {
