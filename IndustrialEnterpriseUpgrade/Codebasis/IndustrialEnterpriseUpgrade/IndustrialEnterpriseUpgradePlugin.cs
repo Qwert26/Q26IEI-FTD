@@ -3,7 +3,7 @@ using UnityEngine;
 namespace IndustrialEnterpriseUpgrade {
 	public class IndustrialEnterpriseUpgradePlugin : FTDPlugin {
 		public string name => "Industrial Enterprise Upgrade";
-		public Version version => new Version(2,12,0,0);
+		public Version version => new Version(2,121,0,0);
 		/// <summary>
 		/// Das Plugin wird geladen und sollte notwendige Vorbereitungen treffen.
 		/// </summary>
