@@ -71,11 +71,19 @@
     <Compile Include="Movement\Water\VoithSchneiderNode.cs" />
     <Compile Include="Movement\Water\VoithSchneiderNodeSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Weapon\Flamethrower\FlamethrowerComponent.cs" />
+    <Compile Include="Weapon\Flamethrower\FlamethrowerConnectedTypeInfo.cs" />
+    <Compile Include="Weapon\Flamethrower\FlamethrowerConnectionTypes.cs" />
+    <Compile Include="Weapon\Flamethrower\FlamethrowerFeeler.cs" />
+    <Compile Include="Weapon\Flamethrower\FlamethrowerFiringPiece.cs" />
+    <Compile Include="Weapon\Flamethrower\FlamethrowerNode.cs" />
+    <Compile Include="Weapon\Flamethrower\FlamethrowerNodeSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
