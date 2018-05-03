@@ -100,9 +100,9 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		/// <returns>Informationen über den Block, damit der Nutzer entscheiden kann, ob er ihn jetzt braucht oder nicht.</returns>
 		public override BlockTechInfo GetTechInfo() {
 			return new BlockTechInfo().
-				AddSpec("Maximum total Angle", 45).
 				AddStatement("Allows AIs to take control of special Hydrofoils, which have also limited angles. This provides greater control than ACBs.").
-				AddSpec("Maximum amount of components",Node.ComponentList.MaximumComponentCount);
+				AddSpec("Maximum total Angle", 45).
+				AddSpec("Maximum amount of components",HydrofoilNodeSet.MAX_COMPONENT_COUNT);
 		}
 		/// <summary>
 		/// Erstellt eine GUI, mit dem der Nutzer interagieren kann.
