@@ -48,10 +48,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\AIAirshipAI.cs" />
-    <Compile Include="AI\AIAirshipMovementCard.cs" />
-    <Compile Include="AI\AirshipAIParameters.cs" />
-    <Compile Include="AI\AIThrustercraftAI.cs" />
     <Compile Include="IndustrialEnterpriseUpgradePlugin.cs" />
     <Compile Include="Movement\KinematicMeasure.cs" />
     <Compile Include="Movement\Water\HydrofoilActuator.cs" />
