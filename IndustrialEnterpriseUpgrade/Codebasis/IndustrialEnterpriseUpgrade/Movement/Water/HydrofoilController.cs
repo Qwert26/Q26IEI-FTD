@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 using System;
+using BrilliantSkies.Ui.Layouts;
+using BrilliantSkies.Ui.Tips;
+using BrilliantSkies.Core.UiSounds;
+using BrilliantSkies.Core.Timing;
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	public class HydrofoilController : Block, IGoverningBlock<HydrofoilNode> {
 		#region Steuervariablen
@@ -29,24 +33,27 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			get;
 			set;
 		}
+
+		public INode NodeInterface => Node;
+
 		public override void StateChanged(IBlockStateChange change) {
 			base.StateChanged(change);
 			if(change.IsAvailableToConstruct) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
-				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).AddSender(this);
+				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct<HydrofoilNodeSet>(MainConstruct as global::MainConstruct,Construct).AddSender(this);
 
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
-				MainConstruct.iScheduler.RegisterForFixedUpdateTwo(new Action<float>(FixedUpdate));
+				MainConstruct.iScheduler.RegisterForFixedUpdateTwo(new Action<ITimeStep>(FixedUpdate));
 			}
 			if(change.IsLostToConstructOrConstructLost) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
-				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).RemoveSender(this);
+				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct<HydrofoilNodeSet>(MainConstruct as global::MainConstruct,Construct).RemoveSender(this);
 
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
-				MainConstruct.iScheduler.UnregisterForFixedUpdateTwo(new Action<float>(FixedUpdate));
+				MainConstruct.iScheduler.UnregisterForFixedUpdateTwo(new Action<ITimeStep>(FixedUpdate));
 			}
 		}
-		public void FixedUpdate(float deltaTime) {
+		public void FixedUpdate(ITimeStep deltaTime) {
 			{
 				//Wir verwenden dieselbe Funktionsweise wie die Klasse "ControlBlock", auch bekannt als ACB.
 				//Die Berechnung sorgen dafür, dass das gleichzeitige Drücken von gegensätzlichen Steuertasten sich gegenseitig auslöschen und somit keine Bewegung erfolgt.

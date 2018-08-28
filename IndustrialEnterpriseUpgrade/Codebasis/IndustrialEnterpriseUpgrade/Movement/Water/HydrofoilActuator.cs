@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System;
+using BrilliantSkies.Common.Forces;
+using BrilliantSkies.Core.Timing;
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	public class HydrofoilActuator : HydrofoilComponent {
 		private const float lift = 10;
@@ -44,12 +46,12 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 				forceMultiplier = Mathf.Sin(Mathf.Deg2Rad*2f*parameterAngle);
 			}
 		}
-		public void FixedUpdatePhysics(float deltaTime) {
-			float waterLevel = MainConstruct.iMainPhysics.WaterLevelArray.Read(LocalPosition.x,LocalPosition.z);
-			float forwardSpeed = MainConstruct.iMainPhysics.iVelocities.VelocityInParticularDirection(GameWorldForwards);
+		public void FixedUpdatePhysics(ITimeStep deltaTime) {
+			float waterLevel = GetConstructableOrSubConstructable().Water.WaterLevelFinder.GetWaterLevel(LocalPosition);
+			float forwardSpeed = MainConstruct.iPartPhysics.iVelocities.VelocityInParticularDirection(GameWorldForwards);
 			float relativeSubmersion = Mathf.Min(1, waterLevel + 0.5f - AltitudeAboveMeanSeaLevel);
 			if(relativeSubmersion > 0) {
-				MainConstruct.iMainPhysics.RequestForce(GameWorldUp * lift * forwardSpeed * forceMultiplier * relativeSubmersion, GameWorldPosition, enumForceType.LiftSurface);
+				MainConstruct.iPlatformPhysics.RequestForce(new ForceAtGlobalPoint(GameWorldUp * lift * forwardSpeed * forceMultiplier * relativeSubmersion, GameWorldPosition, enumForceType.LiftSurface));
 			}
 		}
 		public override void StateChanged(IBlockStateChange change) {
@@ -59,10 +61,10 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			base.StateChanged(change);
 			if(change.IsAvailableToConstruct) {
 				//Das Aktualisieren des Winkels findet in FixedUpdateTwo statt, wir wollen unsere Kraft erst danach zum gelten bringen.
-				GetConstructableOrSubConstructable().iScheduler.RegisterForFixedUpdateThree(new Action<float>(FixedUpdatePhysics));
+				GetConstructableOrSubConstructable().iScheduler.RegisterForFixedUpdateThree(new Action<ITimeStep>(FixedUpdatePhysics));
 			} else if(change.IsLostToConstructOrConstructLost) {
 				//Das Aktualisieren des Winkels findet in FixedUpdateTwo statt, wir wollen unsere Kraft erst danach zum gelten bringen.
-				GetConstructableOrSubConstructable().iScheduler.UnregisterForFixedUpdateThree(new Action<float>(FixedUpdatePhysics));
+				GetConstructableOrSubConstructable().iScheduler.UnregisterForFixedUpdateThree(new Action<ITimeStep>(FixedUpdatePhysics));
 			}
 		}
 		#region Nutzerinteraktion

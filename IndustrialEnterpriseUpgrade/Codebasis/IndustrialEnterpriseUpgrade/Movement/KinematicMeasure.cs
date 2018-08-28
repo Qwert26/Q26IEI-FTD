@@ -1,6 +1,11 @@
-﻿using UnityEngine;
+﻿using BrilliantSkies.Core.Timing;
+using BrilliantSkies.Core.UiSounds;
+using BrilliantSkies.Ui.Layouts;
+using BrilliantSkies.Ui.Tips;
 using System;
-namespace IndustrialEnterpriseUpgrade.Movement {
+using UnityEngine;
+namespace IndustrialEnterpriseUpgrade.Movement
+{
 	public class KinematicMeasure : Block {
 		private static string[] NAMES = new string[] {"velocity","acceleration","jerk","jounce","crackle","pop"};
 		private const string INFINITY = "Unlimited";
@@ -20,19 +25,19 @@ namespace IndustrialEnterpriseUpgrade.Movement {
 		public override void StateChanged(IBlockStateChange change) {
 			base.StateChanged(change);
 			if (change.IsAvailableToConstruct) {
-				GetConstructableOrSubConstructable().iScheduler.RegisterForFixedUpdate(new Action<float>(Measure));
+				GetConstructableOrSubConstructable().iScheduler.RegisterForFixedUpdate(new Action<ITimeStep>(Measure));
 			} else if (change.IsLostToConstructOrConstructLost) {
-				GetConstructableOrSubConstructable().iScheduler.UnregisterForFixedUpdate(new Action<float>(Measure));
+				GetConstructableOrSubConstructable().iScheduler.UnregisterForFixedUpdate(new Action<ITimeStep>(Measure));
 			}
 		}
-		private void Measure(float deltaTime) {
+		private void Measure(ITimeStep deltaTime) {
 			Vector3[] currentLinearMeasurements = new Vector3[NAMES.Length];
-			currentLinearMeasurements[0] = MainConstruct.iPhysics.iVelocities.VelocityVector;
+			currentLinearMeasurements[0] = MainConstruct.iPartPhysics.iVelocities.VelocityVector;
 			Vector3[] currentAngularMeasurements = new Vector3[NAMES.Length];
-			currentAngularMeasurements[0] = MainConstruct.iPhysics.iVelocities.AngularVelocity*Mathf.Rad2Deg;
+			currentAngularMeasurements[0] = MainConstruct.iPartPhysics.iVelocities.AngularVelocity*Mathf.Rad2Deg;
 			for (int i=1;i<NAMES.Length;i++) {
-				currentLinearMeasurements[i] = (currentLinearMeasurements[i - 1] - lastLinearMeasurements[i - 1]) / deltaTime;
-				currentAngularMeasurements[i] = (currentAngularMeasurements[i - 1] - lastAngularMeasurements[i - 1]) / deltaTime;
+				currentLinearMeasurements[i] = (currentLinearMeasurements[i - 1] - lastLinearMeasurements[i - 1]) / deltaTime.DeltaTime;
+				currentAngularMeasurements[i] = (currentAngularMeasurements[i - 1] - lastAngularMeasurements[i - 1]) / deltaTime.DeltaTime;
 			}
 			lastLinearMeasurements = currentLinearMeasurements;
 			lastAngularMeasurements = currentAngularMeasurements;

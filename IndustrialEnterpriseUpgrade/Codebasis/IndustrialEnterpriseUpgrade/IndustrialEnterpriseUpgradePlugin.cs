@@ -1,9 +1,10 @@
 ﻿using System;
-using UnityEngine;
+using BrilliantSkies.Core.Modding;
+using BrilliantSkies.Core;
 namespace IndustrialEnterpriseUpgrade {
-	public class IndustrialEnterpriseUpgradePlugin : FTDPlugin, FTDPlugin_PostLoad {
+	public class IndustrialEnterpriseUpgradePlugin : GamePlugin, GamePlugin_PostLoad {
 		public string name => "Industrial Enterprise Upgrade";
-		public Version version => new Version(2,16,0,0);
+		public Version version => new Version(2,2,7,0);
 		/// <summary>
 		/// Lädt weitere Daten nach, sobald das Spiel sämtliche Plug-Ins geladen hat.
 		/// </summary>
@@ -17,13 +18,13 @@ namespace IndustrialEnterpriseUpgrade {
 		/// Das Plugin wird geladen und sollte notwendige Vorbereitungen treffen.
 		/// </summary>
 		public void OnLoad() {
-			Debug.Log(name+" V"+version+" has been loaded.");
+			SafeLogging.Log(name+" V"+version+" has been loaded.");
 		}
 		/// <summary>
 		/// Das Spiel wird beendet und das Plugin sollte nun Sachen abspeichern. Die Methode wird jedoch im Spiel nie aufgerufen...
 		/// </summary>
 		public void OnSave() {
-			Debug.Log(name+" didn´t saved anything.");
+			SafeLogging.Log(name+" didn´t saved anything.");
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using BrilliantSkies.Core.Types;
+using UnityEngine;
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	public class HydrofoilConnector : HydrofoilComponent {
 		private enumDirections localActuatorOutput;
