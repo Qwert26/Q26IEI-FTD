@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("IndustrialEnterpriseUpgrade")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,4 +31,4 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder Standardwerte für die Build- und Revisionsnummern verwenden,
 // indem Sie "*" wie unten gezeigt eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.2.12.*")]
+[assembly: AssemblyVersion("2.2.14.*")]
