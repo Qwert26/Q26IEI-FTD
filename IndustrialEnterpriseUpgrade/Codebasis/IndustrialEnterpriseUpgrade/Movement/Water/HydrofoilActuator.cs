@@ -2,6 +2,7 @@
 using System;
 using BrilliantSkies.Common.Forces;
 using BrilliantSkies.Core.Timing;
+using BrilliantSkies.Common.CarriedObjects;
 namespace IndustrialEnterpriseUpgrade.Movement.Water {
 	public class HydrofoilActuator : HydrofoilComponent {
 		private const float lift = 10;

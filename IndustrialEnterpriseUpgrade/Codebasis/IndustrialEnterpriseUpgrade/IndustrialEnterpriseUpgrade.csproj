@@ -60,6 +60,9 @@
     <Reference Include="Ftd">
       <HintPath>D:\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\Ftd.dll</HintPath>
     </Reference>
+    <Reference Include="GridCasts">
+      <HintPath>D:\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\GridCasts.dll</HintPath>
+    </Reference>
     <Reference Include="Modding">
       <HintPath>D:\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\Modding.dll</HintPath>
     </Reference>
