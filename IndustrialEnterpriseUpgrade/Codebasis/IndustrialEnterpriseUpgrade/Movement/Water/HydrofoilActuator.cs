@@ -48,11 +48,11 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			}
 		}
 		public void FixedUpdatePhysics(ITimeStep deltaTime) {
-			float waterLevel = GetConstructableOrSubConstructable().Water.WaterLevelFinder.GetWaterLevel(LocalPosition);
-			float forwardSpeed = MainConstruct.iPartPhysics.iVelocities.VelocityInParticularDirection(GameWorldForwards);
+			float waterLevel = GetConstructableOrSubConstructable().WaterLevelRestricted.WaterLevelFinder.GetWaterLevel(LocalPosition);
+			float forwardSpeed = MainConstruct.PartPhysicsRestricted.iVelocities.VelocityInParticularDirection(GameWorldForwards);
 			float relativeSubmersion = Mathf.Min(1, waterLevel + 0.5f - AltitudeAboveMeanSeaLevel);
 			if(relativeSubmersion > 0) {
-				MainConstruct.iPlatformPhysics.RequestForce(new ForceAtGlobalPoint(GameWorldUp * lift * forwardSpeed * forceMultiplier * relativeSubmersion, GameWorldPosition, enumForceType.LiftSurface));
+				MainConstruct.PlatformPhysicsRestricted.RequestForce(new ForceAtGlobalPoint(GameWorldUp * lift * forwardSpeed * forceMultiplier * relativeSubmersion, GameWorldPosition, enumForceType.LiftSurface));
 			}
 		}
 		public override void StateChanged(IBlockStateChange change) {
@@ -62,10 +62,10 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			base.StateChanged(change);
 			if(change.IsAvailableToConstruct) {
 				//Das Aktualisieren des Winkels findet in FixedUpdateTwo statt, wir wollen unsere Kraft erst danach zum gelten bringen.
-				GetConstructableOrSubConstructable().iScheduler.RegisterForFixedUpdateThree(new Action<ITimeStep>(FixedUpdatePhysics));
+				GetConstructableOrSubConstructable().SchedulerRestricted.RegisterForFixedUpdateThree(new Action<ITimeStep>(FixedUpdatePhysics));
 			} else if(change.IsLostToConstructOrConstructLost) {
 				//Das Aktualisieren des Winkels findet in FixedUpdateTwo statt, wir wollen unsere Kraft erst danach zum gelten bringen.
-				GetConstructableOrSubConstructable().iScheduler.UnregisterForFixedUpdateThree(new Action<ITimeStep>(FixedUpdatePhysics));
+				GetConstructableOrSubConstructable().SchedulerRestricted.UnregisterForFixedUpdateThree(new Action<ITimeStep>(FixedUpdatePhysics));
 			}
 		}
 		#region Nutzerinteraktion

@@ -1,10 +1,11 @@
 ﻿using System;
-using BrilliantSkies.Core.Modding;
 using BrilliantSkies.Core;
-namespace IndustrialEnterpriseUpgrade {
+using BrilliantSkies.Modding;
+namespace IndustrialEnterpriseUpgrade
+{
 	public class IndustrialEnterpriseUpgradePlugin : GamePlugin, GamePlugin_PostLoad {
 		public string name => "Industrial Enterprise Upgrade";
-		public Version version => new Version(2,2,25,3);
+		public Version version => new Version(2,2,26,10);
 		/// <summary>
 		/// Lädt weitere Daten nach, sobald das Spiel sämtliche Plug-Ins geladen hat.
 		/// </summary>

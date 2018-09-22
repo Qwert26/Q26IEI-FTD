@@ -40,26 +40,26 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 			base.StateChanged(change);
 			if(change.IsAvailableToConstruct) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
-				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct<HydrofoilNodeSet>(MainConstruct as global::MainConstruct,Construct).AddSender(this);
+				MainConstruct.NodeSetsRestricted.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).AddSender(this);
 
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
-				MainConstruct.iScheduler.RegisterForFixedUpdateTwo(new Action<ITimeStep>(FixedUpdate));
+				MainConstruct.SchedulerRestricted.RegisterForFixedUpdateTwo(new Action<ITimeStep>(FixedUpdate));
 			}
 			if(change.IsLostToConstructOrConstructLost) {
 				//GetOrConstruct fügt das NodeSet automatisch hinzu!
-				MainConstruct.iNodeSets.DictionaryOfAllSets.GetOrConstruct<HydrofoilNodeSet>(MainConstruct as global::MainConstruct,Construct).RemoveSender(this);
+				MainConstruct.NodeSetsRestricted.DictionaryOfAllSets.GetOrConstruct(MainConstruct as global::MainConstruct,Construct).RemoveSender(this);
 
 				//Steuereingaben finden im FixedUpdate statt, wir müssen für unser Update dahinter sein.
-				MainConstruct.iScheduler.UnregisterForFixedUpdateTwo(new Action<ITimeStep>(FixedUpdate));
+				MainConstruct.SchedulerRestricted.UnregisterForFixedUpdateTwo(new Action<ITimeStep>(FixedUpdate));
 			}
 		}
 		public void FixedUpdate(ITimeStep deltaTime) {
 			{
 				//Wir verwenden dieselbe Funktionsweise wie die Klasse "ControlBlock", auch bekannt als ACB.
 				//Die Berechnung sorgen dafür, dass das gleichzeitige Drücken von gegensätzlichen Steuertasten sich gegenseitig auslöschen und somit keine Bewegung erfolgt.
-				yaw = MainConstruct.iControls.Last.Max(ControlType.Right)-MainConstruct.iControls.Last.Max(ControlType.Left);
-				pitch = MainConstruct.iControls.Last.Max(ControlType.Up)-MainConstruct.iControls.Last.Max(ControlType.Down);
-				roll = MainConstruct.iControls.Last.Max(ControlType.RollRight)-MainConstruct.iControls.Last.Max(ControlType.RollLeft);
+				yaw = MainConstruct.ControlsRestricted.Last.Max(ControlType.Right)-MainConstruct.ControlsRestricted.Last.Max(ControlType.Left);
+				pitch = MainConstruct.ControlsRestricted.Last.Max(ControlType.Up)-MainConstruct.ControlsRestricted.Last.Max(ControlType.Down);
+				roll = MainConstruct.ControlsRestricted.Last.Max(ControlType.RollRight)-MainConstruct.ControlsRestricted.Last.Max(ControlType.RollLeft);
 			}
 			{//Berechne alle nötigen Winkel und setze die Aktuatoren.
 				float angle = 0;

@@ -25,16 +25,16 @@ namespace IndustrialEnterpriseUpgrade.Movement
 		public override void StateChanged(IBlockStateChange change) {
 			base.StateChanged(change);
 			if (change.IsAvailableToConstruct) {
-				GetConstructableOrSubConstructable().iScheduler.RegisterForFixedUpdate(new Action<ITimeStep>(Measure));
+				GetConstructableOrSubConstructable().SchedulerRestricted.RegisterForFixedUpdate(new Action<ITimeStep>(Measure));
 			} else if (change.IsLostToConstructOrConstructLost) {
-				GetConstructableOrSubConstructable().iScheduler.UnregisterForFixedUpdate(new Action<ITimeStep>(Measure));
+				GetConstructableOrSubConstructable().SchedulerRestricted.UnregisterForFixedUpdate(new Action<ITimeStep>(Measure));
 			}
 		}
 		private void Measure(ITimeStep deltaTime) {
 			Vector3[] currentLinearMeasurements = new Vector3[NAMES.Length];
-			currentLinearMeasurements[0] = MainConstruct.iPartPhysics.iVelocities.VelocityVector;
+			currentLinearMeasurements[0] = MainConstruct.PartPhysicsRestricted.iVelocities.VelocityVector;
 			Vector3[] currentAngularMeasurements = new Vector3[NAMES.Length];
-			currentAngularMeasurements[0] = MainConstruct.iPartPhysics.iVelocities.AngularVelocity*Mathf.Rad2Deg;
+			currentAngularMeasurements[0] = MainConstruct.PartPhysicsRestricted.iVelocities.AngularVelocity*Mathf.Rad2Deg;
 			for (int i=1;i<NAMES.Length;i++) {
 				currentLinearMeasurements[i] = (currentLinearMeasurements[i - 1] - lastLinearMeasurements[i - 1]) / deltaTime.DeltaTime;
 				currentAngularMeasurements[i] = (currentAngularMeasurements[i - 1] - lastAngularMeasurements[i - 1]) / deltaTime.DeltaTime;
