@@ -3,13 +3,9 @@
 	/// Ein Fühler wird benutzt, um Blöcke einer Mehr-Block-Struktur zu finden und um Informationen des sendenen Blocks weiter zu geben.
 	/// </summary>
 	public class HydrofoilFeeler : GenericFeeler<HydrofoilNode> {
-		private enumDirections localActuatorOutput;
-		public enumDirections LocalActuatorOutput {
-			get => localActuatorOutput;
-			set => localActuatorOutput = value;
-		}
-		public HydrofoilFeeler(HydrofoilNode sender) : base(sender) {
-			localActuatorOutput = enumDirections.unknown;
+        public enumDirections LocalActuatorOutput { get; set; }
+        public HydrofoilFeeler(HydrofoilNode sender) : base(sender) {
+			LocalActuatorOutput = enumDirections.unknown;
 		}
 	}
 }

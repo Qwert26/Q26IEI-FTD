@@ -6,7 +6,7 @@ namespace IndustrialEnterpriseUpgrade.Movement.Water {
 		protected override int ConnectionType => (int)HydrofoilConnectionTypes.Connectors;
 		public override void ComponentStart() {
 			base.ComponentStart();
-			int actuatorOutput = (int)item.Code.Variables.GetInt("ActuatorOutput", 0);
+			int actuatorOutput = item.Code.Variables.GetInt("ActuatorOutput", 0);
 			switch(actuatorOutput) {
 				case 2:
 					localActuatorOutput = enumDirections.left;
