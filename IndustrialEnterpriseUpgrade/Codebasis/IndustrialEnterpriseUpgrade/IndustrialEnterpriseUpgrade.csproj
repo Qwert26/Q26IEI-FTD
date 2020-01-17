@@ -354,9 +354,10 @@
     <Compile Include="Defense\EllipsoidShield\ESFeeler.cs" />
     <Compile Include="Defense\EllipsoidShield\ESGenerator.cs" />
     <Compile Include="Defense\EllipsoidShield\ESNode.cs" />
-    <Compile Include="Experimental\BreadBoards\CustomTagDriveModule.cs" />
-    <Compile Include="Experimental\BreadBoards\CustomTagInput.cs" />
+    <Compile Include="BreadBoards\CustomTagDriveModule.cs" />
+    <Compile Include="BreadBoards\CustomTagInput.cs" />
     <Compile Include="IndustrialEnterpriseUpgradePlugin.cs" />
+    <Compile Include="MachineLearning\RelativeFilling.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

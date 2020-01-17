@@ -10,7 +10,7 @@ using BrilliantSkies.Ui.Consoles.Interpretters.Subjective.Texts;
 using BrilliantSkies.Ui.Tips;
 using System;
 using System.Linq;
-namespace Experimental.BreadBoards
+namespace IndustrialEnterpriseUpgrade.BreadBoards
 {
 	[BoardComponent("Custom Tag Driver","Input can be assigned to any custom tagged axis.")]
 	public class CustomTagDriveModule : BreadboardModule

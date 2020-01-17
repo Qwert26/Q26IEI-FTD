@@ -9,7 +9,7 @@ using BrilliantSkies.Ui.Consoles.Getters;
 using BrilliantSkies.Ui.Consoles.Interpretters.Subjective.Texts;
 using BrilliantSkies.Ui.Tips;
 using System;
-namespace Experimental.BreadBoards
+namespace IndustrialEnterpriseUpgrade.BreadBoards
 {
 	[BoardComponent("Custom Tag Input", "Outputs the total propulsion request of the previous frame")]
 	public class CustomTagInput : BreadboardModuleInput
