@@ -5,7 +5,7 @@ namespace IndustrialEnterpriseUpgrade
 {
 	public class IndustrialEnterpriseUpgradePlugin : GamePlugin, GamePlugin_PostLoad {
 		public string name => "Industrial Enterprise Upgrade";
-		public Version version => new Version(2,2,26,10);
+		public Version version => new Version(2, 5, 2, 19);
 		/// <summary>
 		/// Lädt weitere Daten nach, sobald das Spiel sämtliche Plug-Ins geladen hat.
 		/// </summary>
@@ -22,7 +22,7 @@ namespace IndustrialEnterpriseUpgrade
 			SafeLogging.Log(name+" V"+version+" has been loaded.");
 		}
 		/// <summary>
-		/// Das Spiel wird beendet und das Plugin sollte nun Sachen abspeichern. Die Methode wird jedoch im Spiel nie aufgerufen...
+		/// Das Spiel wird beendet und das Plugin sollte nun Sachen abspeichern.
 		/// </summary>
 		public void OnSave() {
 			SafeLogging.Log(name+" didn´t saved anything.");
