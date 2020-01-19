@@ -358,6 +358,7 @@
     <Compile Include="BreadBoards\CustomTagInput.cs" />
     <Compile Include="IndustrialEnterpriseUpgradePlugin.cs" />
     <Compile Include="MachineLearning\RelativeFilling.cs" />
+    <Compile Include="MachineLearning\RelativeFillingExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
