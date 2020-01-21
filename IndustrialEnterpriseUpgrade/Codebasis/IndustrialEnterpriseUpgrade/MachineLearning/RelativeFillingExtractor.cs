@@ -4,6 +4,8 @@ using BrilliantSkies.Core.Constants;
 using System.Text;
 using BrilliantSkies.Core.Types;
 using System.IO;
+using BrilliantSkies.Core;
+
 namespace IndustrialEnterpriseUpgrade.MachineLearning
 {
 	public class RelativeFillingExtractor : CharacterItem
@@ -15,23 +17,38 @@ namespace IndustrialEnterpriseUpgrade.MachineLearning
 		}
 		public override void LeftClick()
 		{
-			IMainConstructBlock imcb = GetPointedBlock().MainConstruct;
-			ConstructBasics cb = imcb.AllBasicsRestricted as ConstructBasics;
+			Block pointedBlock = GetPointedBlock();
+			if (pointedBlock == null)
+				return;
+			IMainConstructBlock imcb = pointedBlock.MainConstruct;
+			IAllBasicsRestricted cb = imcb.AllBasicsRestricted;
 			int sx = cb.sx;
 			int sy = cb.sy;
 			int sz = cb.sz;
 			float[,,] fillings = new float[sx, sy, sz];
 			foreach (Block b in cb.AliveAndDead.Blocks)
 			{
+				if (b == null)
+					continue;
 				Quaternion inverseLocalRotation = Quaternion.Inverse(b.LocalRotation);
-				foreach (Vector3i lps in b.LocalPositions) {
-					Vector3i deltaPos = lps - b.LocalPosition;
-					Vector3i inverseLocal = (inverseLocalRotation * deltaPos);
-					fillings[lps.x - cb.minx_, lps.y - cb.miny_, lps.z - cb.minz_] = b.RelativeFillingByName().RelativeFillingAtLocalCoordinates(inverseLocal.x, inverseLocal.y, inverseLocal.z);
+				if (b.LocalPositions != null) //Block ist größer als 1X1X1.
+				{
+					foreach (Vector3i lps in b.LocalPositions)
+					{
+						Vector3i deltaPos = lps - b.LocalPosition;
+						Vector3i inverseLocal = inverseLocalRotation * deltaPos;
+						RelativeFilling? rf = b.RelativeFillingByName();
+						fillings[lps.x - cb.minx_, lps.y - cb.miny_, lps.z - cb.minz_] = rf.HasValue ? rf.Value.RelativeFillingAtLocalCoordinates(inverseLocal.x, inverseLocal.y, inverseLocal.z) : 0;
+					}
+				}
+				else
+				{
+					RelativeFilling? rf = b.RelativeFillingByName();
+					fillings[b.LocalPosition.x - cb.minx_, b.LocalPosition.y - cb.miny_, b.LocalPosition.z - cb.minz_] = rf.HasValue ? rf.Value.RelativeFillingAtLocalCoordinates(0, 0, 0) : 0;
 				}
 			}
-			StringBuilder path = Get.ProfilePaths.ProfileRootDir().Append($"RelativeFillings/{imcb.GetName()}.txt");
-			using (StreamWriter sw = new StreamWriter(path.ToString(), false))
+			string path = Get.PerminentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetName()}.txt";
+			using (StreamWriter sw = new StreamWriter(path, false))
 			{
 				sw.WriteLine("XYZ");//Reihenfolge
 				sw.WriteLine($"{sx} {sy} {sz} {cb.minx_} {cb.miny_} {cb.minz_} {cb.maxx_} {cb.maxy_} {cb.maxz_}");//Größe, Minimum, Maximum

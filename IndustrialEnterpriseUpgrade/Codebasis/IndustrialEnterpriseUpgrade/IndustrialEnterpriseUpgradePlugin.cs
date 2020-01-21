@@ -1,6 +1,8 @@
 ﻿using System;
+using BrilliantSkies.Common.Circuits;
 using BrilliantSkies.Core;
 using BrilliantSkies.Modding;
+using IndustrialEnterpriseUpgrade.BreadBoards;
 namespace IndustrialEnterpriseUpgrade
 {
 	public class IndustrialEnterpriseUpgradePlugin : GamePlugin, GamePlugin_PostLoad {
@@ -19,6 +21,8 @@ namespace IndustrialEnterpriseUpgrade
 		/// Das Plugin wird geladen und sollte notwendige Vorbereitungen treffen.
 		/// </summary>
 		public void OnLoad() {
+			BoardTypes.FtdBreadboard.Add(new BoardTypes.ComponentType(typeof(CustomTagDriveModule)));
+			//BoardTypes.FtdBreadboard.Add(new BoardTypes.ComponentType(typeof(CustomTagInput)));
 			SafeLogging.Log(name+" V"+version+" has been loaded.");
 		}
 		/// <summary>
