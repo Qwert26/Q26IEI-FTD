@@ -1,19 +1,19 @@
 ﻿using BrilliantSkies.Ftd.Avatar.Items;
 using UnityEngine;
+using UnityEngine.UI;
 using BrilliantSkies.Core.Constants;
-using System.Text;
 using BrilliantSkies.Core.Types;
 using System.IO;
-using BrilliantSkies.Core;
-
+using System;
 namespace IndustrialEnterpriseUpgrade.MachineLearning
 {
 	public class RelativeFillingExtractor : CharacterItem
 	{
 		public override string PrimaryFunctionDescription => "Create relative filling map";
+		public override string SecondaryFunctionDescription => "Save relative filling map as Pictures";
 		public override bool AreYouTwoHanded()
 		{
-			return false;
+			return true;
 		}
 		public override void LeftClick()
 		{
@@ -25,7 +25,59 @@ namespace IndustrialEnterpriseUpgrade.MachineLearning
 			int sx = cb.sx;
 			int sy = cb.sy;
 			int sz = cb.sz;
-			float[,,] fillings = new float[sx, sy, sz];
+			float[,,] fillings = GetFillings(pointedBlock);
+			string path = Get.PerminentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetName()}.txt";
+			using (StreamWriter sw = new StreamWriter(path, false))
+			{
+				sw.WriteLine("XYZ");//Reihenfolge
+				sw.WriteLine($"{sx} {sy} {sz} {cb.minx_} {cb.miny_} {cb.minz_} {cb.maxx_} {cb.maxy_} {cb.maxz_}");//Größe, Minimum, Maximum
+				for (int x = 0; x < sx; x++)
+				{
+					for (int y = 0; y < sy; y++)
+					{
+						for (int z = 0; z < sz; z++)
+						{
+							sw.Write($"{fillings[x, y, z]} ");//Daten
+						}
+					}
+				}
+			}
+		}
+		public override void RightClick()
+		{
+			Block pointedBlock = GetPointedBlock();
+			if (pointedBlock == null)
+				return;
+			IMainConstructBlock imcb = pointedBlock.MainConstruct;
+			IAllBasicsRestricted cb = imcb.AllBasicsRestricted;
+			int sx = cb.sx;
+			int sy = cb.sy;
+			int sz = cb.sz;
+			float[,,] fillings = GetFillings(pointedBlock);
+			//Texture3D texture3D = new Texture3D(sx, sy, sz, TextureFormat.RFloat, false);
+			Texture2D texture2D = new Texture2D(sy, sz, TextureFormat.RGB24, false)
+			{
+				filterMode = FilterMode.Point
+			};
+			for (int ix = 0; ix < sx; ix++)
+			{
+				for (int iy = 0; iy < sy; iy++)
+				{
+					for (int iz = 0; iz < sz; iz++)
+					{
+						texture2D.SetPixel(iy, iz, Color.white * fillings[ix, iy, iz]);
+					}
+				}
+				texture2D.Apply(false, false);
+				string path = Get.PerminentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetName()}_ScanX_{ix}.png";
+				File.WriteAllBytes(path, texture2D.EncodeToPNG());
+			}
+			Destroy(texture2D);
+		}
+		private float[,,] GetFillings(Block pointedBlock) {
+			IMainConstructBlock imcb = pointedBlock.MainConstruct;
+			IAllBasicsRestricted cb = imcb.AllBasicsRestricted;
+			float[,,] fillings = new float[cb.sx, cb.sy, cb.sz];
 			foreach (Block b in cb.AliveAndDead.Blocks)
 			{
 				if (b == null)
@@ -47,22 +99,7 @@ namespace IndustrialEnterpriseUpgrade.MachineLearning
 					fillings[b.LocalPosition.x - cb.minx_, b.LocalPosition.y - cb.miny_, b.LocalPosition.z - cb.minz_] = rf.HasValue ? rf.Value.RelativeFillingAtLocalCoordinates(0, 0, 0) : 0;
 				}
 			}
-			string path = Get.PerminentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetName()}.txt";
-			using (StreamWriter sw = new StreamWriter(path, false))
-			{
-				sw.WriteLine("XYZ");//Reihenfolge
-				sw.WriteLine($"{sx} {sy} {sz} {cb.minx_} {cb.miny_} {cb.minz_} {cb.maxx_} {cb.maxy_} {cb.maxz_}");//Größe, Minimum, Maximum
-				for (int x = 0; x < sx; x++)
-				{
-					for (int y = 0; y < sy; y++)
-					{
-						for (int z = 0; z < sz; z++)
-						{
-							sw.Write($"{fillings[x, y, z]} ");//Daten
-						}
-					}
-				}
-			}
+			return fillings;
 		}
 	}
 }
