@@ -11,7 +11,7 @@ using BrilliantSkies.Ui.Tips;
 using System;
 namespace IndustrialEnterpriseUpgrade.BreadBoards
 {
-	[BoardComponent("Custom Tag Input", "Outputs the total propulsion request of the previous frame")]
+	[LocalBoardComponentScraped("###IEI_Breadboards.CTI", "Custom Tag Input", "Outputs the total propulsion request of the previous frame")]
 	[Obsolete("Custom Axis do not save their last propulsion request")]
 	public class CustomTagInput : BreadboardModuleInput
 	{

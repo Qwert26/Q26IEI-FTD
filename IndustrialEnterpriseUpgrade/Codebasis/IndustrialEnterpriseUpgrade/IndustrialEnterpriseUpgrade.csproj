@@ -59,6 +59,9 @@
       <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\Boo.Lang.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BytesHelper">
+      <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\BytesHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Common">
       <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\Common.dll</HintPath>
       <Private>False</Private>
@@ -84,9 +87,18 @@
       <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\Ftd.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FtdIntegrationTests">
+      <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\FtdIntegrationTests.dll</HintPath>
+    </Reference>
+    <Reference Include="FtdRequirements">
+      <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\FtdRequirements.dll</HintPath>
+    </Reference>
     <Reference Include="GridCasts">
       <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\GridCasts.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Localisation">
+      <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\Localisation.dll</HintPath>
     </Reference>
     <Reference Include="Modding">
       <HintPath>..\..\..\..\..\Alle Spiele\Steam Spiele\steamapps\common\From The Depths\From_The_Depths_Data\Managed\Modding.dll</HintPath>

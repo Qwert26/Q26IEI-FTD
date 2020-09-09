@@ -12,7 +12,7 @@ using System;
 using System.Linq;
 namespace IndustrialEnterpriseUpgrade.BreadBoards
 {
-	[BoardComponent("Custom Tag Driver","Input can be assigned to any custom tagged axis.")]
+	[LocalBoardComponentScraped("###IEI_Breadboards.CTD","Custom Tag Driver","Input can be assigned to any custom tagged axis.")]
 	public class CustomTagDriveModule : BreadboardModule
 	{
 		private float _input = 0f;

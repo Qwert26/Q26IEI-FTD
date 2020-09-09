@@ -1,8 +1,8 @@
 {
-	name:"Industrial Enterprise Upgrade",
-	version:"2.5.2.19",
-	filename:"IndustrialEnterpriseUpgrade.dll",
-	depends:[],
-    conflicts: [],
-    gameversion: "2.5.2"
+	"name":"Industrial Enterprise Upgrade",
+	"version":"2.7.4.6",
+	"filename":"IndustrialEnterpriseUpgrade.dll",
+	"depends":[],
+    "conflicts": [],
+    "gameversion": "2.7.4"
 }

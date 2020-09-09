@@ -26,7 +26,7 @@ namespace IndustrialEnterpriseUpgrade.MachineLearning
 			int sy = cb.sy;
 			int sz = cb.sz;
 			float[,,] fillings = GetFillings(pointedBlock);
-			string path = Get.PerminentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetName()}.txt";
+			string path = Get.PermanentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetForce().Name}.txt";
 			using (StreamWriter sw = new StreamWriter(path, false))
 			{
 				sw.WriteLine("XYZ");//Reihenfolge
@@ -69,7 +69,7 @@ namespace IndustrialEnterpriseUpgrade.MachineLearning
 					}
 				}
 				texture2D.Apply(false, false);
-				string path = Get.PerminentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetName()}_ScanX_{ix}.png";
+				string path = Get.PermanentPaths.GetSpecificModDir("Industrial Enterprise Upgrade") + $"RelativeFillings/{imcb.GetForce().Name}_ScanX_{ix}.png";
 				File.WriteAllBytes(path, texture2D.EncodeToPNG());
 			}
 			Destroy(texture2D);
