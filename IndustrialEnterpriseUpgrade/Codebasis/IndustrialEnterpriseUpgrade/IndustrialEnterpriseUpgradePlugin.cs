@@ -1,13 +1,13 @@
 ﻿using System;
 using BrilliantSkies.Common.Circuits;
-using BrilliantSkies.Core;
+using BrilliantSkies.Core.Logger;
 using BrilliantSkies.Modding;
 using IndustrialEnterpriseUpgrade.BreadBoards;
 namespace IndustrialEnterpriseUpgrade
 {
 	public class IndustrialEnterpriseUpgradePlugin : GamePlugin, GamePlugin_PostLoad {
 		public string name => "Industrial Enterprise Upgrade";
-		public Version version => new Version(2, 5, 2, 19);
+		public Version version => new Version(2, 8, 2, 5);
 		/// <summary>
 		/// Lädt weitere Daten nach, sobald das Spiel sämtliche Plug-Ins geladen hat.
 		/// </summary>
@@ -23,13 +23,13 @@ namespace IndustrialEnterpriseUpgrade
 		public void OnLoad() {
 			BoardTypes.FtdBreadboard.Add(new BoardTypes.ComponentType(typeof(CustomTagDriveModule)));
 			//BoardTypes.FtdBreadboard.Add(new BoardTypes.ComponentType(typeof(CustomTagInput)));
-			SafeLogging.Log(name+" V"+version+" has been loaded.");
+			AdvLogger.LogInfo(name+" V"+version+" has been loaded.");
 		}
 		/// <summary>
 		/// Das Spiel wird beendet und das Plugin sollte nun Sachen abspeichern.
 		/// </summary>
 		public void OnSave() {
-			SafeLogging.Log(name+" didn´t saved anything.");
+			AdvLogger.LogInfo(name+" didn´t saved anything.");
 		}
 	}
 }

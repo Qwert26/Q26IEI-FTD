@@ -12,7 +12,7 @@ using System;
 namespace IndustrialEnterpriseUpgrade.BreadBoards
 {
 	[LocalBoardComponentScraped("###IEI_Breadboards.CTI", "Custom Tag Input", "Outputs the total propulsion request of the previous frame")]
-	[Obsolete("Custom Axis do not save their last propulsion request")]
+	[Obsolete("Custom Axis do not save their last propulsion request.")]
 	public class CustomTagInput : BreadboardModuleInput
 	{
 		public override Guid ComponentTypeId => new Guid("C94ED822-EF32-4DA5-B122-4438F781A78D");
