@@ -7,7 +7,7 @@ namespace IndustrialEnterpriseUpgrade
 {
 	public class IndustrialEnterpriseUpgradePlugin : GamePlugin, GamePlugin_PostLoad {
 		public string name => "Industrial Enterprise Upgrade";
-		public Version version => new Version(2, 8, 2, 5);
+		public Version version => new Version(3, 2, 5, 8);
 		/// <summary>
 		/// Lädt weitere Daten nach, sobald das Spiel sämtliche Plug-Ins geladen hat.
 		/// </summary>
